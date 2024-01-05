@@ -1,0 +1,223 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CommandParser</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.utils</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CommandParser (it.polimi.ingsw.utils)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommandParser</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 47)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CommandParser$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 48)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.utils;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Phase;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Player;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.messageModel.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.view.RemoteView;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * This class parses the command string received from the client.
+<i>10</i>&nbsp; * The main information the parser receives is the game&#39;s phase, which is used to decide which type of string is expected
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class CommandParser {
+<i>13</i>&nbsp;    private final Phase phase;
+<i>14</i>&nbsp;    private String string;
+<i>15</i>&nbsp;    private final Player player;
+<i>16</i>&nbsp;    private final RemoteView view;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Class&#39; constructor
+<i>20</i>&nbsp;     * @param phase is the actual phase
+<i>21</i>&nbsp;     * @param string is the client&#39;s sent string
+<i>22</i>&nbsp;     * @param player is the instance of player that is sending the command
+<i>23</i>&nbsp;     * @param view is the instance of the player view that is asking to parse the command
+<i>24</i>&nbsp;     */
+<b class="nc"><i>25</i>&nbsp;    public CommandParser(Phase phase, String string, Player player, RemoteView view){</b>
+<b class="nc"><i>26</i>&nbsp;        this.phase = phase;</b>
+<b class="nc"><i>27</i>&nbsp;        this.string = string;</b>
+<b class="nc"><i>28</i>&nbsp;        this.player = player;</b>
+<b class="nc"><i>29</i>&nbsp;        this.view = view;</b>
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     *  The input string is parsed based on each game&#39;s phase: if the string&#39;s format doesn&#39;t pass a few tests (based on the phase) an IllegalArgumentException is thrown.
+<i>34</i>&nbsp;     *  DRAWCARD: expect x,y or x,y,z format.
+<i>35</i>&nbsp;     *  PICK_CARD: expect a single integer value.
+<i>36</i>&nbsp;     *  SETWORKER1 and SETWORKER2: expect x,y format representing the cell coordinates.
+<i>37</i>&nbsp;     *  MOVE: expect w,x,y format where w is the worker id and x,y the cel coordinates.
+<i>38</i>&nbsp;     *  BUILT: expect x,y format as cell coordinates.
+<i>39</i>&nbsp;     *  WAIT_GOD_ANSWER: expect a single char for the answer y or n.
+<i>40</i>&nbsp;     *  PROMETHEUS_WORKER: expect a single integer representing the selected worker id.
+<i>41</i>&nbsp;     *  END_GAME: expect a single char representing the player answer y or n.
+<i>42</i>&nbsp;     * @return the specific Message subclass to notify the controller.
+<i>43</i>&nbsp;     * @throws IllegalArgumentException if the input string does not pass the game phase&#39;s tests.
+<i>44</i>&nbsp;     * @throws IndexOutOfBoundsException reported at the function that called the parser the errors sent by the used class.
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    public Message parse() throws IllegalArgumentException, IndexOutOfBoundsException{
+<i>47</i>&nbsp;        String[] s;
+<b class="nc"><i>48</i>&nbsp;        switch(phase){</b>
+<i>49</i>&nbsp;            case DRAWCARD:
+<b class="nc"><i>50</i>&nbsp;                string = string.replaceAll(&quot; &quot;, &quot;&quot;);</b>
+<b class="nc"><i>51</i>&nbsp;                s = string.split(&quot;,&quot;);//x,y,z</b>
+<b class="nc"><i>52</i>&nbsp;                if(s.length == 2){</b>
+<b class="nc"><i>53</i>&nbsp;                    if(Integer.parseInt(s[0]) &gt;= 0 &amp;&amp; Integer.parseInt(s[1]) &gt;= 0 &amp;&amp; Integer.parseInt(s[0]) &lt;= 13 &amp;&amp; Integer.parseInt(s[1]) &lt;= 13){</b>
+<b class="nc"><i>54</i>&nbsp;                        return new DrawedCards(player, Integer.parseInt(s[0]), Integer.parseInt(s[1]), view);</b>
+<i>55</i>&nbsp;                    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;                }
+<b class="nc"><i>58</i>&nbsp;                else if(s.length == 3){</b>
+<b class="nc"><i>59</i>&nbsp;                    if(Integer.parseInt(s[0]) &gt;= 0 &amp;&amp; Integer.parseInt(s[1]) &gt;= 0 &amp;&amp; Integer.parseInt(s[0]) &lt;= 13 &amp;&amp; Integer.parseInt(s[1]) &lt;= 13 &amp;&amp; Integer.parseInt(s[2]) &gt;= 0 &amp;&amp; Integer.parseInt(s[2]) &lt;= 13) {</b>
+<b class="nc"><i>60</i>&nbsp;                        return new DrawedCards(player, Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2]), view);</b>
+<i>61</i>&nbsp;                    }
+<i>62</i>&nbsp;                }
+<b class="nc"><i>63</i>&nbsp;                throw new IllegalArgumentException(&quot;Wrong input&quot;);</b>
+<i>64</i>&nbsp;            case PICK_CARD:
+<b class="nc"><i>65</i>&nbsp;                int pickCard = Integer.parseInt(String.valueOf(string.charAt(0)));</b>
+<b class="nc"><i>66</i>&nbsp;                if(pickCard &lt;= 2 &amp;&amp; pickCard &gt;= 0){</b>
+<b class="nc"><i>67</i>&nbsp;                    return new PickedCard(this.player, this.view, pickCard);</b>
+<i>68</i>&nbsp;                }
+<b class="nc"><i>69</i>&nbsp;                throw new IllegalArgumentException(&quot;Wrong index input&quot;);</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;            case SETWORKER1: case SETWORKER2:
+<b class="nc"><i>72</i>&nbsp;                string = string.replaceAll(&quot; &quot;, &quot;&quot;);</b>
+<b class="nc"><i>73</i>&nbsp;                s = string.split(&quot;,&quot;);//x,y</b>
+<b class="nc"><i>74</i>&nbsp;                if(s.length &gt; 2){</b>
+<b class="nc"><i>75</i>&nbsp;                    throw new IllegalArgumentException(&quot;Wrong input, please insert x,y&quot;);</b>
+<i>76</i>&nbsp;                }
+<b class="nc"><i>77</i>&nbsp;                return new PlayerWorker(player, Integer.parseInt(s[0]), Integer.parseInt(s[1]), view);</b>
+<i>78</i>&nbsp;            case MOVE:
+<b class="nc"><i>79</i>&nbsp;                string = string.replaceAll(&quot; &quot;, &quot;&quot;);</b>
+<b class="nc"><i>80</i>&nbsp;                s = string.split(&quot;,&quot;);//workerID, x, y</b>
+<b class="nc"><i>81</i>&nbsp;                if(s.length&gt;3){</b>
+<b class="nc"><i>82</i>&nbsp;                    throw new IllegalArgumentException(&quot;Wrong input, please insert w,x,y&quot;);</b>
+<i>83</i>&nbsp;                }
+<b class="nc"><i>84</i>&nbsp;                return new PlayerMove(player, Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2]), view);</b>
+<i>85</i>&nbsp;            case BUILD:
+<b class="nc"><i>86</i>&nbsp;                string = string.replaceAll(&quot; &quot;, &quot;&quot;);</b>
+<b class="nc"><i>87</i>&nbsp;                s = string.split(&quot;,&quot;);//x,y</b>
+<b class="nc"><i>88</i>&nbsp;                if(s.length&gt;2){</b>
+<b class="nc"><i>89</i>&nbsp;                    throw new IllegalArgumentException(&quot;Wrong input, please insert x,y&quot;);</b>
+<i>90</i>&nbsp;                }
+<b class="nc"><i>91</i>&nbsp;                return new PlayerBuild(player, player.getUsedWorker() , Integer.parseInt(s[0]), Integer.parseInt(s[1]), view);</b>
+<i>92</i>&nbsp;            case WAIT_GOD_ANSWER:
+<b class="nc"><i>93</i>&nbsp;                char waitGodAnswer = string.toLowerCase().charAt(0);</b>
+<b class="nc"><i>94</i>&nbsp;                if(waitGodAnswer != &#39;y&#39; &amp;&amp; waitGodAnswer != &#39;n&#39;){</b>
+<b class="nc"><i>95</i>&nbsp;                    throw new IllegalArgumentException(&quot;Please insert only y or n&quot;);</b>
+<i>96</i>&nbsp;                }
+<b class="nc"><i>97</i>&nbsp;                return new UseGodPower(player, view, waitGodAnswer);</b>
+<i>98</i>&nbsp;            case PROMETHEUS_WORKER:
+<b class="nc"><i>99</i>&nbsp;                int prometheusWorker = Integer.parseInt(string);</b>
+<b class="nc"><i>100</i>&nbsp;                if(prometheusWorker &gt;= 2 || prometheusWorker &lt; 0){</b>
+<b class="nc"><i>101</i>&nbsp;                    throw new IllegalArgumentException(&quot;Please insert only 0 or 1&quot;);</b>
+<i>102</i>&nbsp;                }
+<b class="nc"><i>103</i>&nbsp;                return new SetPrometheus(player, view, prometheusWorker);</b>
+<i>104</i>&nbsp;            case END_GAME:
+<b class="nc"><i>105</i>&nbsp;                char endGame = string.toLowerCase().charAt(0);</b>
+<b class="nc"><i>106</i>&nbsp;                if(endGame != &#39;y&#39; &amp;&amp; endGame != &#39;n&#39;){</b>
+<b class="nc"><i>107</i>&nbsp;                    throw new IllegalArgumentException(&quot;Please insert only y or n&quot;);</b>
+<i>108</i>&nbsp;                }
+<b class="nc"><i>109</i>&nbsp;                return new NewGameMessage(player, view, endGame, view.getConnection(), view.getLobby());</b>
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;            default: throw new IllegalArgumentException(&quot;Can&#39;t do it now&quot;);</b>
+<i>112</i>&nbsp;        }
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

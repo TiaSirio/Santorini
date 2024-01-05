@@ -1,0 +1,206 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Artemis</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.gods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Artemis (it.polimi.ingsw.model.gods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Artemis</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (37/ 37)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;
+<i>2</i>&nbsp;package it.polimi.ingsw.model.gods;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.GodCardController;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.messageModel.MessageType;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerMove;
+<i>8</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.List;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; This class represents Artemis&#39; GodCard
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class Artemis extends GodCard {
+<i>16</i>&nbsp;    private Cell firstMove;
+<i>17</i>&nbsp;    private boolean usedPower;
+<i>18</i>&nbsp;    private Worker previousWorker;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * {@inheritDoc}
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public Artemis() {
+<b class="fc"><i>24</i>&nbsp;        super(Gods.ARTEMIS, Phase.MOVE);</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * @return the cell corresponding to the first move made by the player.
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public Cell getFirstMove(){
+<b class="fc"><i>31</i>&nbsp;        return firstMove;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * @param firstBuilt is the cell corresponding to the first move made by the player.
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    public void setFirstMove(Cell firstBuilt){
+<b class="fc"><i>38</i>&nbsp;        this.firstMove = firstBuilt;</b>
+<b class="fc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * This method moves the player; it could be used only if the player decides to activate his power.
+<i>43</i>&nbsp;     * @param objectList contains the model of the actual game (objectList.get(0)).
+<i>44</i>&nbsp;     * @see PlayerMove {@link PlayerMove}
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    @Override
+<i>47</i>&nbsp;    public void usePower(List&lt;Object&gt; objectList) {
+<b class="fc"><i>48</i>&nbsp;        usedPower = true;</b>
+<b class="fc"><i>49</i>&nbsp;        Model model = (Model)objectList.get(0);</b>
+<b class="fc"><i>50</i>&nbsp;        model.setNextPhase(getPhase());</b>
+<b class="fc"><i>51</i>&nbsp;        model.setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>52</i>&nbsp;        model.setNextMessageType(MessageType.MOVE);</b>
+<b class="fc"><i>53</i>&nbsp;        model.notifyChanges();</b>
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /**
+<i>57</i>&nbsp;     * Artemis can move twice but not in the starting cell
+<i>58</i>&nbsp;     * This method controls if it&#39;s the first time it moves and it asks if you want to use the power.
+<i>59</i>&nbsp;     * If this is the second time the player moves, it controls if the used worker is the same, the selected cell is not the one from which it moved
+<i>60</i>&nbsp;     * and then resets the flags and makes a normal move.
+<i>61</i>&nbsp;     * @param model is the game model
+<i>62</i>&nbsp;     * @param controller is the game controller
+<i>63</i>&nbsp;     * @param move is the move message received by the view
+<i>64</i>&nbsp;     * @return false only if this is the second time the player moves and every error control is negative
+<i>65</i>&nbsp;     */
+<i>66</i>&nbsp;    @Override
+<i>67</i>&nbsp;    public boolean handlerMove(Model model, GodCardController controller, PlayerMove move) {
+<b class="fc"><i>68</i>&nbsp;        if(hasUsedPower()){</b>
+<b class="fc"><i>69</i>&nbsp;            if(getPreviousWorker() != move.getPlayer().getWorker(move.getWorkerId())){</b>
+<b class="fc"><i>70</i>&nbsp;                move.getView().reportError(&quot;You have to move the same worker&quot;);</b>
+<i>71</i>&nbsp;            }
+<b class="fc"><i>72</i>&nbsp;            else if(getFirstMove() == model.getBoard().getCell(move.getRow(), move.getColumn())){</b>
+<b class="fc"><i>73</i>&nbsp;                move.getView().reportError(&quot;You can&#39;t move into the previous cell&quot;);</b>
+<i>74</i>&nbsp;            }
+<i>75</i>&nbsp;            else{
+<b class="fc"><i>76</i>&nbsp;                setUsedPower(false);</b>
+<b class="fc"><i>77</i>&nbsp;                return false;</b>
+<i>78</i>&nbsp;            }
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;        else{
+<b class="fc"><i>81</i>&nbsp;            setFirstMove(model.getActualPlayer().getWorker(move.getWorkerId()).getCell());</b>
+<b class="fc"><i>82</i>&nbsp;            setPreviousWorker(model.getActualPlayer().getWorker(move.getWorkerId()));</b>
+<b class="fc"><i>83</i>&nbsp;            model.setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="fc"><i>84</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="fc"><i>85</i>&nbsp;            model.setNextMessageType(MessageType.USE_POWER);</b>
+<b class="fc"><i>86</i>&nbsp;            model.move(move);</b>
+<b class="fc"><i>87</i>&nbsp;            if(controller.canMove(move.getPlayer().getWorker(move.getWorkerId()), move.getPlayer())==1){</b>
+<b class="fc"><i>88</i>&nbsp;                model.setNextPhase(Phase.BUILD);</b>
+<b class="fc"><i>89</i>&nbsp;                model.setNextPlayerMessage(PlayerMessage.BUILD);</b>
+<b class="fc"><i>90</i>&nbsp;                model.setNextMessageType(MessageType.BUILD);</b>
+<i>91</i>&nbsp;            }
+<b class="fc"><i>92</i>&nbsp;            model.notifyChanges();</b>
+<i>93</i>&nbsp;        }
+<b class="fc"><i>94</i>&nbsp;        return true;</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * @return true if the power has already been used.
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;    public boolean hasUsedPower() {
+<b class="fc"><i>100</i>&nbsp;        return usedPower;</b>
+<i>101</i>&nbsp;    }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    /**
+<i>104</i>&nbsp;     * @param usedPower is a flag that if it&#39;s true it means that the power has already been used.
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;    public void setUsedPower(boolean usedPower) {
+<b class="fc"><i>107</i>&nbsp;        this.usedPower = usedPower;</b>
+<b class="fc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * @return the worker that was used in the previous move (before using the power).
+<i>112</i>&nbsp;     */
+<i>113</i>&nbsp;    public Worker getPreviousWorker() {
+<b class="fc"><i>114</i>&nbsp;        return previousWorker;</b>
+<i>115</i>&nbsp;    }
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;    /**
+<i>118</i>&nbsp;     * @param previousWorker is the worker representing the previous move made by the player (before using the power).
+<i>119</i>&nbsp;     */
+<i>120</i>&nbsp;    public void setPreviousWorker(Worker previousWorker) {
+<b class="fc"><i>121</i>&nbsp;        this.previousWorker = previousWorker;</b>
+<b class="fc"><i>122</i>&nbsp;    }</b>
+<i>123</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

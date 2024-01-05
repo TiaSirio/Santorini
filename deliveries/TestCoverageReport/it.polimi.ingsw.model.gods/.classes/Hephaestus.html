@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Hephaestus</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.gods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Hephaestus (it.polimi.ingsw.model.gods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Hephaestus</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (24/ 24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;
+<i>2</i>&nbsp;package it.polimi.ingsw.model.gods;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.GodCardController;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.messageModel.MessageType;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerBuild;
+<i>8</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.List;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; This class is intended to represent the Hephaestus&#39;s GodCard
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class Hephaestus extends GodCard {
+<i>16</i>&nbsp;    private Cell firstBuilt;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * {@inheritDoc}
+<i>20</i>&nbsp;     */
+<i>21</i>&nbsp;    public Hephaestus() {
+<b class="fc"><i>22</i>&nbsp;        super(Gods.HEPHAESTUS, Phase.BUILD);</b>
+<b class="fc"><i>23</i>&nbsp;    }</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /**
+<i>26</i>&nbsp;     * This method is used to get the first cell built by the player in this turn.
+<i>27</i>&nbsp;     * @return the first built cell.
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    public Cell getFirstBuilt() {
+<b class="fc"><i>30</i>&nbsp;        return firstBuilt;</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    /**
+<i>34</i>&nbsp;     * This method is used to set the first building&#39;s cell built by the player.
+<i>35</i>&nbsp;     * @param firstBuilt represent the first cell built by the player in this turn.
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    public void setFirstBuilt(Cell firstBuilt) {
+<b class="fc"><i>38</i>&nbsp;        this.firstBuilt = firstBuilt;</b>
+<b class="fc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * This method makes a player&#39;s worker build another time, in the same cell built in this turn.
+<i>43</i>&nbsp;     * @param objectList contain the model of the actual game (objectList.get(0)).
+<i>44</i>&nbsp;     * @see Model {@link Model} In the model is contained the increaseLevel Method.
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    @Override
+<i>47</i>&nbsp;    public void usePower(List&lt;Object&gt; objectList) {
+<b class="fc"><i>48</i>&nbsp;        Model model = (Model) objectList.get(0);</b>
+<b class="fc"><i>49</i>&nbsp;        if (model.getNextPlayerGC().getCardGod() == Gods.PROMETHEUS) {</b>
+<b class="fc"><i>50</i>&nbsp;            model.setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="fc"><i>51</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="fc"><i>52</i>&nbsp;            model.setNextMessageType(MessageType.USE_POWER);</b>
+<i>53</i>&nbsp;        } else {
+<b class="fc"><i>54</i>&nbsp;            model.setNextPhase(Phase.next(getPhase()));</b>
+<b class="fc"><i>55</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>56</i>&nbsp;            model.setNextMessageType(MessageType.MOVE);</b>
+<i>57</i>&nbsp;        }
+<b class="fc"><i>58</i>&nbsp;        model.updateTurn();</b>
+<b class="fc"><i>59</i>&nbsp;        model.increaseLevel(firstBuilt, Blocks.getBlock(firstBuilt.getLevel().getBlockId() + 1));</b>
+<b class="fc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    /**
+<i>63</i>&nbsp;     * This method change game flow if the cell used to built by the player have a level less then 2, so Hepheastus can built an other time
+<i>64</i>&nbsp;     * It change game model phase to ask the usage of god power
+<i>65</i>&nbsp;     * @param model the play model
+<i>66</i>&nbsp;     * @param controller the play controller
+<i>67</i>&nbsp;     * @param build the message received by the view
+<i>68</i>&nbsp;     * @param buildingCell the cell where the player wants to build
+<i>69</i>&nbsp;     * @return true if the gale flow has been modified, else false
+<i>70</i>&nbsp;     */
+<i>71</i>&nbsp;    @Override
+<i>72</i>&nbsp;    public boolean handlerBuild(Model model, GodCardController controller, PlayerBuild build, Cell buildingCell) {
+<b class="fc"><i>73</i>&nbsp;        if(model.getBoard().getCell(build.getX(), build.getY()).getLevel().getBlockId()&lt;2){</b>
+<b class="fc"><i>74</i>&nbsp;            setFirstBuilt(model.getBoard().getCell(build.getX(), build.getY()));</b>
+<b class="fc"><i>75</i>&nbsp;            model.setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="fc"><i>76</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="fc"><i>77</i>&nbsp;            model.setNextMessageType(MessageType.USE_POWER);</b>
+<b class="fc"><i>78</i>&nbsp;            controller.godIncreaseLevel(buildingCell.getLevel().getBlockId(), buildingCell);</b>
+<b class="fc"><i>79</i>&nbsp;            return true;</b>
+<i>80</i>&nbsp;        }
+<b class="fc"><i>81</i>&nbsp;        return false;</b>
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

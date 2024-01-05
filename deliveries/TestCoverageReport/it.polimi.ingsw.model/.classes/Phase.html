@@ -1,0 +1,190 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Phase</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Phase (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Phase</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (39/ 39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * This class defines the different phases of the game in a normal match.
+<i>5</i>&nbsp; */
+<b class="fc"><i>6</i>&nbsp;public enum Phase {</b>
+<b class="fc"><i>7</i>&nbsp;    WAIT_PLAYERS(-5),</b>
+<b class="fc"><i>8</i>&nbsp;    DRAWCARD(-4),</b>
+<b class="fc"><i>9</i>&nbsp;    PICK_CARD(-3),</b>
+<b class="fc"><i>10</i>&nbsp;    SETWORKER1(-2),</b>
+<b class="fc"><i>11</i>&nbsp;    SETWORKER2(-1),</b>
+<b class="fc"><i>12</i>&nbsp;    BEGINNING(0),</b>
+<b class="fc"><i>13</i>&nbsp;    MOVE(1),</b>
+<b class="fc"><i>14</i>&nbsp;    BUILD(2),</b>
+<i>15</i>&nbsp;
+<b class="fc"><i>16</i>&nbsp;    WAIT_GOD_ANSWER(5),</b>
+<b class="fc"><i>17</i>&nbsp;    PROMETHEUS_WORKER(6),</b>
+<i>18</i>&nbsp;
+<b class="fc"><i>19</i>&nbsp;    END_GAME(10)</b>
+<i>20</i>&nbsp;    ;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    private final int phaseId;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * Class&#39; constructor
+<i>26</i>&nbsp;     * @param phaseId is an integer representing the actual phase in the game.
+<i>27</i>&nbsp;     */
+<b class="fc"><i>28</i>&nbsp;    Phase(int phaseId) {</b>
+<b class="fc"><i>29</i>&nbsp;        this.phaseId = phaseId;</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * @return an integer corresponding to a phase in the game.
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    public int getPhaseId() {
+<b class="fc"><i>36</i>&nbsp;        return phaseId;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * This method returns the next game&#39;s phase.
+<i>41</i>&nbsp;     * @param p defines the id of the actual phase. The accepted values are: -5 = DRAWCARD, -4 = PICK_CARD, -3 = SETWORKER1, -2 = SETWORKER2, -1 || 0 || 2 = MOVE, 1 || 6 = BUILD, 10 = END_GAME.
+<i>42</i>&nbsp;     * @return the next phase.
+<i>43</i>&nbsp;     * @throws IllegalArgumentException if the id is less than -5 or higher than 2, except for 6, 10.
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    public static Phase next(Phase p) throws IllegalArgumentException{
+<b class="fc"><i>46</i>&nbsp;        int id = p.getPhaseId();</b>
+<b class="fc"><i>47</i>&nbsp;        switch (id){</b>
+<i>48</i>&nbsp;            case -5:
+<b class="fc"><i>49</i>&nbsp;                return Phase.DRAWCARD;</b>
+<i>50</i>&nbsp;            case -4:
+<b class="fc"><i>51</i>&nbsp;                return Phase.PICK_CARD;</b>
+<i>52</i>&nbsp;            case -3:
+<b class="fc"><i>53</i>&nbsp;                return Phase.SETWORKER1;</b>
+<i>54</i>&nbsp;            case -2:
+<b class="fc"><i>55</i>&nbsp;                return Phase.SETWORKER2;</b>
+<i>56</i>&nbsp;            case -1:
+<i>57</i>&nbsp;            case 0:
+<i>58</i>&nbsp;            case 2:
+<b class="fc"><i>59</i>&nbsp;                return Phase.MOVE;</b>
+<i>60</i>&nbsp;            case 1:
+<i>61</i>&nbsp;            case 6:
+<b class="fc"><i>62</i>&nbsp;                return Phase.BUILD;</b>
+<i>63</i>&nbsp;            case 10:
+<b class="fc"><i>64</i>&nbsp;                return Phase.END_GAME;</b>
+<i>65</i>&nbsp;            default:
+<b class="fc"><i>66</i>&nbsp;                throw new IllegalArgumentException();</b>
+<i>67</i>&nbsp;        }
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * This method assigns a value to its specific phase.
+<i>72</i>&nbsp;     * @param id defines the phase&#39;s id. The accepted values are: -5 = WAIT_PLAYERS, -4 = DRAWCARD, -3 = PICK_CARD, -2 = SETWORKER1, -1 = SETWORKER2, 0 = BEGINNING, 1 = MOVE, 2 = BUILD, 5 = WAIT_GOD_ANSWER, 6 = PROMETHEUS_WORKER, 10 = END_GAME.
+<i>73</i>&nbsp;     * @return the phase assigned to a given id.
+<i>74</i>&nbsp;     * @throws IllegalArgumentException if the id is less than -5 or higher than 2, except for 5, 6, 10.
+<i>75</i>&nbsp;     */
+<i>76</i>&nbsp;    public static Phase getPhase(int id) throws IllegalArgumentException {
+<b class="fc"><i>77</i>&nbsp;        switch (id){</b>
+<i>78</i>&nbsp;            case -5:
+<b class="fc"><i>79</i>&nbsp;                return Phase.WAIT_PLAYERS;</b>
+<i>80</i>&nbsp;            case -4:
+<b class="fc"><i>81</i>&nbsp;                return Phase.DRAWCARD;</b>
+<i>82</i>&nbsp;            case -3:
+<b class="fc"><i>83</i>&nbsp;                return Phase.PICK_CARD;</b>
+<i>84</i>&nbsp;            case -2:
+<b class="fc"><i>85</i>&nbsp;                return Phase.SETWORKER1;</b>
+<i>86</i>&nbsp;            case -1:
+<b class="fc"><i>87</i>&nbsp;                return Phase.SETWORKER2;</b>
+<i>88</i>&nbsp;            case 0:
+<b class="fc"><i>89</i>&nbsp;                return Phase.BEGINNING;</b>
+<i>90</i>&nbsp;            case 1:
+<b class="fc"><i>91</i>&nbsp;                return Phase.MOVE;</b>
+<i>92</i>&nbsp;            case 2:
+<b class="fc"><i>93</i>&nbsp;                return Phase.BUILD;</b>
+<i>94</i>&nbsp;            case 5:
+<b class="fc"><i>95</i>&nbsp;                return Phase.WAIT_GOD_ANSWER;</b>
+<i>96</i>&nbsp;            case 6:
+<b class="fc"><i>97</i>&nbsp;                return Phase.PROMETHEUS_WORKER;</b>
+<i>98</i>&nbsp;            case 10:
+<b class="fc"><i>99</i>&nbsp;                return Phase.END_GAME;</b>
+<i>100</i>&nbsp;            default:
+<b class="fc"><i>101</i>&nbsp;                throw new IllegalArgumentException();</b>
+<i>102</i>&nbsp;        }
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

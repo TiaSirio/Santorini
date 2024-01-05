@@ -1,0 +1,127 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Parser</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.utils</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Parser (it.polimi.ingsw.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Parser</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.utils;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * This class includes some utilities to parse the strings
+<i>5</i>&nbsp; */
+<b class="nc"><i>6</i>&nbsp;public class Parser {</b>
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;    /**
+<i>9</i>&nbsp;     * This function returns the capitalize version of the same string
+<i>10</i>&nbsp;     * @param string the string that needs to be capitalized
+<i>11</i>&nbsp;     * @return the string in capitalized
+<i>12</i>&nbsp;     */
+<i>13</i>&nbsp;    public static String toCapitalize(String string){
+<b class="nc"><i>14</i>&nbsp;        return string.substring(0,1).toUpperCase() + string.substring(1).toLowerCase();</b>
+<i>15</i>&nbsp;    }
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * This function transforms the lobbies list string to a 2dimensional array
+<i>19</i>&nbsp;     * it is used to fill the lobbies table
+<i>20</i>&nbsp;     * @param inputMessage the lobbies string list
+<i>21</i>&nbsp;     * @return a matrix containing for each lobby the id, the name, number of players and the game mode
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public static String[][] parseLobbies(String inputMessage){
+<b class="nc"><i>24</i>&nbsp;        String[] split = inputMessage.split(&quot;\n&quot;);</b>
+<b class="nc"><i>25</i>&nbsp;        String[][] lobbies = new String[split.length-2][4];</b>
+<b class="nc"><i>26</i>&nbsp;        for(int i=2; i&lt;split.length; i++){</b>
+<b class="nc"><i>27</i>&nbsp;            String lobby = split[i];</b>
+<b class="nc"><i>28</i>&nbsp;            lobby = lobby.replace(&#39;\t&#39;, &#39; &#39;);</b>
+<b class="nc"><i>29</i>&nbsp;            String id = lobby.substring(0, lobby.indexOf(&#39;-&#39;)).trim();</b>
+<b class="nc"><i>30</i>&nbsp;            lobby = lobby.substring(lobby.indexOf(&#39;-&#39;)+2);</b>
+<b class="nc"><i>31</i>&nbsp;            String name = lobby.substring(0, lobby.indexOf(&#39;[&#39;)).trim();</b>
+<b class="nc"><i>32</i>&nbsp;            lobby = lobby.substring(lobby.indexOf(&#39;[&#39;)+1);</b>
+<b class="nc"><i>33</i>&nbsp;            String players = lobby.substring(0, lobby.indexOf(&#39;]&#39;));</b>
+<b class="nc"><i>34</i>&nbsp;            lobby = lobby.substring(lobby.indexOf(&#39;]&#39;)+1);</b>
+<b class="nc"><i>35</i>&nbsp;            String type = lobby.trim();</b>
+<b class="nc"><i>36</i>&nbsp;            lobbies[i-2][0] = id;</b>
+<b class="nc"><i>37</i>&nbsp;            lobbies[i-2][1] = name;</b>
+<b class="nc"><i>38</i>&nbsp;            lobbies[i-2][2] = players;</b>
+<b class="nc"><i>39</i>&nbsp;            lobbies[i-2][3] = type;</b>
+<i>40</i>&nbsp;        }
+<b class="nc"><i>41</i>&nbsp;        return lobbies;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

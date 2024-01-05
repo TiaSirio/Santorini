@@ -1,0 +1,201 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Triton</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.gods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Triton (it.polimi.ingsw.model.gods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Triton</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (36/ 36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.gods;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.Controller;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.GodCardController;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.GodCard;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.Gods;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.Model;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.Phase;
+<i>9</i>&nbsp;import it.polimi.ingsw.model.messageModel.MessageType;
+<i>10</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerMove;
+<i>11</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * This class represents Triton&#39;s GodCard
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class Triton extends GodCard {
+<b class="fc"><i>19</i>&nbsp;    private int usedWorkerID = -1;</b>
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * {@inheritDoc}
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public Triton() {
+<b class="fc"><i>24</i>&nbsp;        super(Gods.TRITON, Phase.MOVE);</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * @return the used worker&#39;s id
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public int getUsedWorkerID(){
+<b class="fc"><i>31</i>&nbsp;        return this.usedWorkerID;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     *
+<i>36</i>&nbsp;     * @param worker is the id of the used worker at the first action
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    public void setUsedWorkerID(int worker){
+<b class="fc"><i>39</i>&nbsp;        this.usedWorkerID =worker;</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     * This function sets the model&#39;s next messages and phase so that it makes the player move again
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    public void usePower(List&lt;Object&gt; objectList) {
+<b class="fc"><i>49</i>&nbsp;        Model model = (Model)objectList.get(0);</b>
+<b class="fc"><i>50</i>&nbsp;        model.setNextPhase(getPhase());</b>
+<b class="fc"><i>51</i>&nbsp;        model.setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>52</i>&nbsp;        model.setNextMessageType(MessageType.MOVE);</b>
+<b class="fc"><i>53</i>&nbsp;        model.notifyChanges();</b>
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /**
+<i>57</i>&nbsp;     * This method adds a control before a move action is performed
+<i>58</i>&nbsp;     * If he tries to use the power but he cannot move, he looses
+<i>59</i>&nbsp;     * @param model is the game&#39;s model
+<i>60</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>61</i>&nbsp;     * @param move is the move message received from the view
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    @Override
+<i>64</i>&nbsp;    public void beforeMoveHandler(Model model, GodCardController controller, PlayerMove move) {
+<b class="fc"><i>65</i>&nbsp;        if(controller.canMove(move.getPlayer().getWorker(move.getWorkerId()),move.getPlayer())==0){</b>
+<b class="fc"><i>66</i>&nbsp;            if(getUsedWorkerID()!=-1)</b>
+<b class="fc"><i>67</i>&nbsp;                model.loose(move.getPlayer());</b>
+<i>68</i>&nbsp;        }
+<b class="fc"><i>69</i>&nbsp;    }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /**
+<i>72</i>&nbsp;     * This method changes the game&#39;s flow by asking the player to use the god&#39;s power after a move
+<i>73</i>&nbsp;     * In particular, this god can move every time he wants around the perimeter of the board. It checks if the selected worker is in the perimeter and if it&#39;s true
+<i>74</i>&nbsp;     * it then asks the player if he/she wants to use the power again, until he gets stuck, he moved away from the perimeter or he answered no
+<i>75</i>&nbsp;     * If the power has been used the worker flag is reset
+<i>76</i>&nbsp;     * @param model is the game&#39;s model
+<i>77</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>78</i>&nbsp;     * @param move is the move&#39;s message received from the view
+<i>79</i>&nbsp;     * @return true if an error is reported or the flow has been modified, false otherwise
+<i>80</i>&nbsp;     */
+<i>81</i>&nbsp;    @Override
+<i>82</i>&nbsp;    public boolean handlerMove(Model model, GodCardController controller, PlayerMove move) {
+<b class="fc"><i>83</i>&nbsp;        if(getUsedWorkerID()==-1){</b>
+<b class="fc"><i>84</i>&nbsp;            setUsedWorkerID(move.getWorkerId());</b>
+<i>85</i>&nbsp;        }
+<b class="fc"><i>86</i>&nbsp;        if(getUsedWorkerID() != move.getWorkerId()){</b>
+<b class="fc"><i>87</i>&nbsp;            move.getView().reportError(&quot;you have to move the same worker&quot;);</b>
+<i>88</i>&nbsp;        }
+<b class="fc"><i>89</i>&nbsp;        else if(move.getRow()==0 || move.getRow()==4 || move.getColumn()==0 || move.getColumn()==4 ){</b>
+<b class="fc"><i>90</i>&nbsp;            model.setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="fc"><i>91</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="fc"><i>92</i>&nbsp;            model.setNextMessageType(MessageType.USE_POWER);</b>
+<b class="fc"><i>93</i>&nbsp;            model.move(move);</b>
+<b class="fc"><i>94</i>&nbsp;            model.notifyChanges();</b>
+<i>95</i>&nbsp;        }
+<i>96</i>&nbsp;        else{
+<b class="fc"><i>97</i>&nbsp;            setUsedWorkerID(-1);</b>
+<b class="fc"><i>98</i>&nbsp;            return false;</b>
+<i>99</i>&nbsp;        }
+<i>100</i>&nbsp;
+<b class="fc"><i>101</i>&nbsp;        return true;</b>
+<i>102</i>&nbsp;    }
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * When a no answer is given for the power, the flow is restored to built (as default)
+<i>106</i>&nbsp;     * @param phase is the god card phase given by the controller
+<i>107</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    @Override
+<i>110</i>&nbsp;    public void performGodMessageForPhaseWithNegativeAnswer(Phase phase, Controller controller) {
+<b class="fc"><i>111</i>&nbsp;        Model model = controller.getModel();</b>
+<b class="fc"><i>112</i>&nbsp;        setUsedWorkerID(-1);</b>
+<b class="fc"><i>113</i>&nbsp;        model.setNextPhase(Phase.BUILD);</b>
+<b class="fc"><i>114</i>&nbsp;        model.setNextPlayerMessage(PlayerMessage.BUILD);</b>
+<b class="fc"><i>115</i>&nbsp;        model.setNextMessageType(MessageType.BUILD);</b>
+<b class="fc"><i>116</i>&nbsp;        model.notifyChanges();</b>
+<b class="fc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UseGodPower</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.messageModel</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UseGodPower (it.polimi.ingsw.model.messageModel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UseGodPower</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.messageModel;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.Controller;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.GodCard;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Model;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.Player;
+<i>7</i>&nbsp;import it.polimi.ingsw.view.View;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.ArrayList;
+<i>10</i>&nbsp;import java.util.Collections;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * This class notifies the controller the player&#39;s choice about using or not a god power
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class UseGodPower extends Message {
+<i>16</i>&nbsp;    final char usePower;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Class constructor
+<i>20</i>&nbsp;     * {@inheritDoc}
+<i>21</i>&nbsp;     * @param usePower char representing the player&#39;s choice
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public UseGodPower(Player player, View view, char usePower) {
+<b class="fc"><i>24</i>&nbsp;        super(player, view);</b>
+<b class="fc"><i>25</i>&nbsp;        this.usePower = usePower;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * If the player chooses to use the god power (y answer), it calls the god card instance&#39;s usePower function
+<i>30</i>&nbsp;     * otherwise it sets the next default model&#39;s configuration for each phase, based on the stage of the game
+<i>31</i>&nbsp;     * @param controller is the game controller&#39;s instance
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    @Override
+<i>34</i>&nbsp;    public void handler(Controller controller) {
+<b class="fc"><i>35</i>&nbsp;        Model model = controller.getModel();</b>
+<b class="fc"><i>36</i>&nbsp;        GodCard playerGodCard = player.getGodCard();</b>
+<b class="fc"><i>37</i>&nbsp;        if(usePower == &#39;y&#39;){</b>
+<b class="fc"><i>38</i>&nbsp;            playerGodCard.usePower(new ArrayList&lt;Object&gt;(Collections.singletonList(model)));</b>
+<i>39</i>&nbsp;        }
+<i>40</i>&nbsp;        else{//se io dico di  no
+<b class="fc"><i>41</i>&nbsp;            playerGodCard.performGodMessageForPhaseWithNegativeAnswer(playerGodCard.getPhase(), controller);</b>
+<i>42</i>&nbsp;        }
+<b class="fc"><i>43</i>&nbsp;    }</b>
+<i>44</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

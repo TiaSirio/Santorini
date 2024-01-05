@@ -1,0 +1,1 @@
+START java -jar santoriniClient.jar -cli

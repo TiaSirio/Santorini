@@ -1,0 +1,144 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PlayerMove</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.messageModel</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PlayerMove (it.polimi.ingsw.model.messageModel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlayerMove</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.messageModel;
+<i>2</i>&nbsp;import it.polimi.ingsw.controller.Controller;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Player;
+<i>4</i>&nbsp;import it.polimi.ingsw.view.View;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * This class notifies the controller that the player is trying to perform a move
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;public class PlayerMove extends Message{
+<i>10</i>&nbsp;    private final int x;
+<i>11</i>&nbsp;    private final int y;
+<i>12</i>&nbsp;    private final int workerId;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Class constructor
+<i>16</i>&nbsp;     * {@inheritDoc}
+<i>17</i>&nbsp;     * @param workerId is the selected worker&#39;s id
+<i>18</i>&nbsp;     * @param x is the new x cell value
+<i>19</i>&nbsp;     * @param y is the new y cell value
+<i>20</i>&nbsp;     */
+<i>21</i>&nbsp;    public PlayerMove(Player player, int workerId, int x, int y, View view) {
+<b class="fc"><i>22</i>&nbsp;        super(player, view);</b>
+<b class="fc"><i>23</i>&nbsp;        this.x = x;</b>
+<b class="fc"><i>24</i>&nbsp;        this.y = y;</b>
+<b class="fc"><i>25</i>&nbsp;        this.workerId = workerId;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     *
+<i>30</i>&nbsp;     * @return selected worker&#39;s id
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    public int getWorkerId(){
+<b class="fc"><i>33</i>&nbsp;        return workerId;</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    /**
+<i>37</i>&nbsp;     *
+<i>38</i>&nbsp;     * @return return the selected c value
+<i>39</i>&nbsp;     */
+<i>40</i>&nbsp;    public int getRow() {
+<b class="fc"><i>41</i>&nbsp;        return x;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     *
+<i>46</i>&nbsp;     * @return the selected y value
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    public int getColumn() {
+<b class="fc"><i>49</i>&nbsp;        return y;</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    /**
+<i>54</i>&nbsp;     * It calls the controller&#39;s move
+<i>55</i>&nbsp;     * @param controller is the game controller&#39;s instance
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    @Override
+<i>58</i>&nbsp;    public void handler(Controller controller) {
+<b class="fc"><i>59</i>&nbsp;        controller.move(this);</b>
+<b class="fc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

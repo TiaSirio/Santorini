@@ -1,0 +1,278 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Server</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Server (it.polimi.ingsw.server)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Server</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (6/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61%
+  </span>
+  <span class="absValue">
+    (47/ 77)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.exceptions.FullLobbyException;
+<i>4</i>&nbsp;import it.polimi.ingsw.exceptions.InvalidLobbyException;
+<i>5</i>&nbsp;import it.polimi.ingsw.exceptions.UnavailablePlayerNameException;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.EndGameServerMessage;
+<i>7</i>&nbsp;import it.polimi.ingsw.utils.LobbyExceptionMessage;
+<i>8</i>&nbsp;import it.polimi.ingsw.exceptions.NoLobbyException;
+<i>9</i>&nbsp;import it.polimi.ingsw.utils.ConnectionMessage;
+<i>10</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.io.IOException;
+<i>13</i>&nbsp;import java.net.ServerSocket;
+<i>14</i>&nbsp;import java.net.Socket;
+<i>15</i>&nbsp;import java.util.*;
+<i>16</i>&nbsp;import java.util.concurrent.ExecutorService;
+<i>17</i>&nbsp;import java.util.concurrent.Executors;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;/**
+<i>20</i>&nbsp; * This class is the main server&#39;s class
+<i>21</i>&nbsp; */
+<i>22</i>&nbsp;public class Server {
+<i>23</i>&nbsp;    private static final int PORT = 15986;
+<i>24</i>&nbsp;    private final ServerSocket serverSocket;
+<b class="fc"><i>25</i>&nbsp;    private final ExecutorService executor = Executors.newCachedThreadPool();</b>
+<b class="fc"><i>26</i>&nbsp;    private final Map&lt;ClientConnection, Lobby&gt; lobbyConnections = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>27</i>&nbsp;    private final List&lt;Lobby&gt; lobbies = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>28</i>&nbsp;    private final Map&lt;Lobby, ArrayList&lt;ClientConnection&gt;&gt; playerInLobby = new HashMap&lt;&gt;();</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Class constructor
+<i>32</i>&nbsp;     * It creates the server&#39;s socket
+<i>33</i>&nbsp;     * @throws IOException if the socket can&#39;t be created
+<i>34</i>&nbsp;     */
+<b class="fc"><i>35</i>&nbsp;    public Server() throws IOException {</b>
+<b class="fc"><i>36</i>&nbsp;        this.serverSocket = new ServerSocket(PORT);</b>
+<b class="fc"><i>37</i>&nbsp;    }</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * This method removes and closes a client connection
+<i>41</i>&nbsp;     * @param connection is the instance of the client&#39;s socket connection
+<i>42</i>&nbsp;     */
+<i>43</i>&nbsp;    public synchronized void deregisterConnection(ClientConnection connection){
+<b class="fc"><i>44</i>&nbsp;        Lobby lobby = this.lobbyConnections.get(connection);</b>
+<b class="fc"><i>45</i>&nbsp;        this.lobbyConnections.get(connection).closeLobby();</b>
+<b class="fc"><i>46</i>&nbsp;        ArrayList&lt;ClientConnection&gt; toRemove = playerInLobby.get(lobby);</b>
+<b class="fc"><i>47</i>&nbsp;        for (ClientConnection clientConnection : toRemove) {</b>
+<b class="fc"><i>48</i>&nbsp;            lobbyConnections.remove(clientConnection);</b>
+<b class="fc"><i>49</i>&nbsp;        }</b>
+<b class="fc"><i>50</i>&nbsp;        this.playerInLobby.remove(lobby);</b>
+<b class="fc"><i>51</i>&nbsp;        this.lobbies.remove(lobby);</b>
+<b class="fc"><i>52</i>&nbsp;    }</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * @return the number of active lobbies in the server
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    public synchronized int getLobbiesCount(){
+<b class="fc"><i>58</i>&nbsp;        return this.lobbies.size();</b>
+<i>59</i>&nbsp;    }
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     *
+<i>63</i>&nbsp;     * @return a string containing the lobby&#39;s id, the name, the number of players in it and the game mode
+<i>64</i>&nbsp;     * @throws NoLobbyException if there is no lobby available
+<i>65</i>&nbsp;     */
+<i>66</i>&nbsp;    public synchronized String getLobbiesNames() throws NoLobbyException {
+<b class="fc"><i>67</i>&nbsp;        if(this.lobbies.size() != 0) {</b>
+<b class="fc"><i>68</i>&nbsp;            StringBuilder names = new StringBuilder(PlayerMessage.JOIN_LOBBY + &quot;\n0 - Go Back\n&quot;);</b>
+<b class="fc"><i>69</i>&nbsp;            for (int i = 0; i &lt; this.lobbies.size(); i++) {</b>
+<b class="fc"><i>70</i>&nbsp;                Lobby lobby = this.lobbies.get(i);</b>
+<i>71</i>&nbsp;                String lobbyPlayers;
+<b class="fc"><i>72</i>&nbsp;                int playerInLobby = this.playerInLobby.get(lobby).size();</b>
+<b class="fc"><i>73</i>&nbsp;                if</b>
+<b class="fc"><i>74</i>&nbsp;                    (lobby.isFull()) lobbyPlayers = &quot; [FULL] &quot;;</b>
+<i>75</i>&nbsp;                else {
+<b class="fc"><i>76</i>&nbsp;                    lobbyPlayers = &quot;\t[&quot; + playerInLobby + &quot;/&quot; + lobby.getNumPlayers() + &quot;]&quot;;</b>
+<b class="fc"><i>77</i>&nbsp;                    if(lobby.isSimplePlay()){</b>
+<b class="fc"><i>78</i>&nbsp;                        lobbyPlayers+=&quot;\tS&quot;;</b>
+<i>79</i>&nbsp;                    }
+<i>80</i>&nbsp;                    else
+<b class="fc"><i>81</i>&nbsp;                        lobbyPlayers+=&quot;\tH&quot;;</b>
+<i>82</i>&nbsp;                }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;
+<b class="fc"><i>85</i>&nbsp;                names.append(i + 1).append(&quot; - &quot;).append(lobby.getLobbyName()).append(lobbyPlayers).append(&quot;\n&quot;);</b>
+<i>86</i>&nbsp;            }
+<b class="fc"><i>87</i>&nbsp;            return names.toString();</b>
+<i>88</i>&nbsp;        } else {
+<b class="nc"><i>89</i>&nbsp;            throw new NoLobbyException(LobbyExceptionMessage.NO_LOBBY);</b>
+<i>90</i>&nbsp;        }
+<i>91</i>&nbsp;    }
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    /**
+<i>94</i>&nbsp;     * This function creates a new lobby in the server
+<i>95</i>&nbsp;     * It also adds the player to the playerInLobby map and lobbyConnections map
+<i>96</i>&nbsp;     * @param lobbyName is the chosen lobby&#39;s name
+<i>97</i>&nbsp;     * @param clientConnection is he client&#39;s socket instance
+<i>98</i>&nbsp;     * @param playerName is the name of the player that created the lobby
+<i>99</i>&nbsp;     * @param numPlayer is the chosen number of player for the lobby
+<i>100</i>&nbsp;     * @param simplePlay is a flag representing that the game is without any god card
+<i>101</i>&nbsp;     */
+<i>102</i>&nbsp;    public synchronized void addLobby(String lobbyName, ClientConnection clientConnection, String playerName, int numPlayer, boolean simplePlay){
+<b class="fc"><i>103</i>&nbsp;        Lobby lobby = new Lobby(lobbyName, playerName, clientConnection, numPlayer, simplePlay);</b>
+<b class="fc"><i>104</i>&nbsp;        this.lobbies.add(lobby);</b>
+<b class="fc"><i>105</i>&nbsp;        this.lobbyConnections.put(clientConnection, lobby);</b>
+<b class="fc"><i>106</i>&nbsp;        ArrayList&lt;ClientConnection&gt; arr = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>107</i>&nbsp;        arr.add(clientConnection);</b>
+<b class="fc"><i>108</i>&nbsp;        this.playerInLobby.put(lobby, arr);</b>
+<b class="fc"><i>109</i>&nbsp;    }</b>
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;    /**
+<i>112</i>&nbsp;     * This function adds a new player to an existing lobby
+<i>113</i>&nbsp;     * It also adds the player to the playerInLobby map and lobbyConnections map
+<i>114</i>&nbsp;     * @param lobbyId is the lobby&#39;s id
+<i>115</i>&nbsp;     * @param clientConnection is the client&#39;s socket connection instance
+<i>116</i>&nbsp;     * @param playerName is the player&#39;s name
+<i>117</i>&nbsp;     * @throws FullLobbyException if the selected lobby is already full
+<i>118</i>&nbsp;     * @throws InvalidLobbyException if the selected lobby doesn&#39;t exist
+<i>119</i>&nbsp;     */
+<i>120</i>&nbsp;    public synchronized void joinLobby(int lobbyId, ClientConnection clientConnection, String playerName) throws FullLobbyException, InvalidLobbyException {
+<i>121</i>&nbsp;        Lobby lobby;
+<i>122</i>&nbsp;        try {
+<b class="fc"><i>123</i>&nbsp;            lobby = this.lobbies.get(lobbyId - 1);</b>
+<b class="fc"><i>124</i>&nbsp;        } catch (Exception e){</b>
+<b class="fc"><i>125</i>&nbsp;            throw new InvalidLobbyException(LobbyExceptionMessage.INVALID_LOBBY);</b>
+<b class="fc"><i>126</i>&nbsp;        }</b>
+<i>127</i>&nbsp;
+<b class="fc"><i>128</i>&nbsp;        if (!lobby.isFull()) {</b>
+<b class="fc"><i>129</i>&nbsp;            if(!lobby.isPlayerNameAvailable(playerName)){</b>
+<b class="nc"><i>130</i>&nbsp;                throw new UnavailablePlayerNameException(LobbyExceptionMessage.UNAVAILABLE_NAME);</b>
+<i>131</i>&nbsp;            }
+<b class="fc"><i>132</i>&nbsp;            lobby.addPlayer(playerName, clientConnection);</b>
+<b class="fc"><i>133</i>&nbsp;            this.lobbyConnections.put(clientConnection, lobby);</b>
+<b class="fc"><i>134</i>&nbsp;            this.playerInLobby.get(lobby).add(clientConnection);</b>
+<i>135</i>&nbsp;        } else {
+<b class="nc"><i>136</i>&nbsp;            throw new FullLobbyException(LobbyExceptionMessage.FULL_LOBBY);</b>
+<i>137</i>&nbsp;        }
+<b class="fc"><i>138</i>&nbsp;    }</b>
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;    /**
+<i>141</i>&nbsp;     * This function adds the players who decided to play another game to a new lobby
+<i>142</i>&nbsp;     * @param endGameServerMessage is the message that holds every information needed for the new game
+<i>143</i>&nbsp;     * @see EndGameServerMessage
+<i>144</i>&nbsp;     */
+<i>145</i>&nbsp;    public synchronized void addLobbyEndGame(EndGameServerMessage endGameServerMessage){
+<b class="nc"><i>146</i>&nbsp;        deleteOldLobby(endGameServerMessage);</b>
+<b class="nc"><i>147</i>&nbsp;        Lobby lobbyNewGame = new Lobby(endGameServerMessage.getLobbyName(), endGameServerMessage.getPlayerNames().get(0), endGameServerMessage.getClientConnections().get(0), endGameServerMessage.getNumPlayer(), endGameServerMessage.isSimplePlay());</b>
+<b class="nc"><i>148</i>&nbsp;        this.lobbies.add(lobbyNewGame);</b>
+<b class="nc"><i>149</i>&nbsp;        this.lobbyConnections.put(endGameServerMessage.getClientConnections().get(0), lobbyNewGame);</b>
+<b class="nc"><i>150</i>&nbsp;        ArrayList&lt;ClientConnection&gt; arr = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>151</i>&nbsp;        arr.add(endGameServerMessage.getClientConnections().get(0));</b>
+<b class="nc"><i>152</i>&nbsp;        this.playerInLobby.put(lobbyNewGame, arr);</b>
+<b class="nc"><i>153</i>&nbsp;        if (endGameServerMessage.getPlayerNames().size() &gt; 1){</b>
+<b class="nc"><i>154</i>&nbsp;            joinLobby(lobbies.size(),endGameServerMessage.getClientConnections().get(1),endGameServerMessage.getPlayerNames().get(1));</b>
+<i>155</i>&nbsp;        }
+<b class="nc"><i>156</i>&nbsp;    }</b>
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    /**
+<i>159</i>&nbsp;     * When a new game is created after the old one is over, this method deletes the old lobby from the server
+<i>160</i>&nbsp;     * @param endGameServerMessage endGameServerMessage the particular message that contains all info for the new play
+<i>161</i>&nbsp;     * @see EndGameServerMessage
+<i>162</i>&nbsp;     */
+<i>163</i>&nbsp;    private synchronized void deleteOldLobby(EndGameServerMessage endGameServerMessage) {
+<i>164</i>&nbsp;        try{
+<b class="nc"><i>165</i>&nbsp;            for (Map.Entry&lt;ClientConnection,Lobby&gt; clientConnections: lobbyConnections.entrySet()) {</b>
+<b class="nc"><i>166</i>&nbsp;                if (clientConnections.getValue() == endGameServerMessage.getLobby())</b>
+<b class="nc"><i>167</i>&nbsp;                    lobbyConnections.remove(clientConnections.getKey());</b>
+<b class="nc"><i>168</i>&nbsp;            }</b>
+<b class="nc"><i>169</i>&nbsp;       }catch (Exception e){</b>
+<i>170</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>171</i>&nbsp;        }</b>
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;
+<b class="nc"><i>174</i>&nbsp;        lobbies.remove(endGameServerMessage.getLobby());</b>
+<b class="nc"><i>175</i>&nbsp;        playerInLobby.remove(endGameServerMessage.getLobby());</b>
+<b class="nc"><i>176</i>&nbsp;    }</b>
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    /**
+<i>179</i>&nbsp;     * {@inheritDoc}
+<i>180</i>&nbsp;     * This function opens the socket and submits new accepted connection to the runner
+<i>181</i>&nbsp;     */
+<i>182</i>&nbsp;    public void run(){
+<b class="nc"><i>183</i>&nbsp;        System.out.println(&quot;Server listening on port: &quot; + PORT);</b>
+<i>184</i>&nbsp;        do{
+<i>185</i>&nbsp;            try {
+<b class="nc"><i>186</i>&nbsp;                Socket socket = serverSocket.accept();</b>
+<b class="nc"><i>187</i>&nbsp;                SocketClientConnection connection = new SocketClientConnection(socket, this);</b>
+<b class="nc"><i>188</i>&nbsp;                executor.submit(connection);</b>
+<b class="nc"><i>189</i>&nbsp;            } catch (IOException e){</b>
+<b class="nc"><i>190</i>&nbsp;                System.err.println(ConnectionMessage.ERROR);</b>
+<b class="nc"><i>191</i>&nbsp;            }</b>
+<b class="nc"><i>192</i>&nbsp;        }while(true);</b>
+<i>193</i>&nbsp;    }
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

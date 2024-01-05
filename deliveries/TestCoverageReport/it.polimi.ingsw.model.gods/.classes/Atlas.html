@@ -1,0 +1,173 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Atlas</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.gods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Atlas (it.polimi.ingsw.model.gods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Atlas</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/ 27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;
+<i>2</i>&nbsp;package it.polimi.ingsw.model.gods;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.GodCardController;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.messageModel.MessageType;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerBuild;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerMove;
+<i>9</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; This class represents Atlas&#39;s GodCard
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;public class Atlas extends GodCard {
+<b class="fc"><i>17</i>&nbsp;    private boolean usedPower = false;</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /**
+<i>20</i>&nbsp;     * {@inheritDoc}
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    public Atlas() {
+<b class="fc"><i>23</i>&nbsp;        super(Gods.ATLAS, Phase.MOVE);</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * This method makes a player&#39;s worker build a DOME at any level; it could only be used if the player decides to activate it.
+<i>28</i>&nbsp;     * @param objectList contain the model of the actual game (objectList.get(0)).
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    @Override
+<i>31</i>&nbsp;    public void usePower(List&lt;Object&gt; objectList) {
+<b class="fc"><i>32</i>&nbsp;        usedPower = true;</b>
+<b class="fc"><i>33</i>&nbsp;        Model model = (Model)objectList.get(0);</b>
+<b class="fc"><i>34</i>&nbsp;        model.setNextPhase(Phase.next(getPhase()));</b>
+<b class="fc"><i>35</i>&nbsp;        model.setNextPlayerMessage(PlayerMessage.BUILD);</b>
+<b class="fc"><i>36</i>&nbsp;        model.setNextMessageType(MessageType.BUILD);</b>
+<b class="fc"><i>37</i>&nbsp;        model.notifyChanges();</b>
+<b class="fc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * @return true if the power has already been used.
+<i>42</i>&nbsp;     */
+<i>43</i>&nbsp;    public boolean hasUsedPower() {
+<b class="fc"><i>44</i>&nbsp;        return usedPower;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**
+<i>48</i>&nbsp;     * Atlas&#39; power has to be activated after a normal move. This function modifies the model&#39;s next phase and messages when a normal move is performed
+<i>49</i>&nbsp;     * @param model is the game&#39;s model
+<i>50</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>51</i>&nbsp;     * @param move is the move message received by the view
+<i>52</i>&nbsp;     */
+<i>53</i>&nbsp;    @Override
+<i>54</i>&nbsp;    public void normalMoveModifier(Model model, GodCardController controller, PlayerMove move) {
+<b class="fc"><i>55</i>&nbsp;        model.setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="fc"><i>56</i>&nbsp;        model.setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="fc"><i>57</i>&nbsp;        model.setNextMessageType(MessageType.USE_POWER);</b>
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * If the power is activated this method build a DOME in the selected cell and return true
+<i>62</i>&nbsp;     * @param model is the game&#39;s model
+<i>63</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>64</i>&nbsp;     * @param build is the message received by the view
+<i>65</i>&nbsp;     * @param buildingCell is the cell where the player wants to build
+<i>66</i>&nbsp;     * @return true if a DOME has been built, false otherwise
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    @Override
+<i>69</i>&nbsp;    public boolean handlerBuild(Model model, GodCardController controller, PlayerBuild build, Cell buildingCell) {
+<b class="fc"><i>70</i>&nbsp;        if(hasUsedPower()) {</b>
+<b class="fc"><i>71</i>&nbsp;            setUsedPower(false);</b>
+<b class="fc"><i>72</i>&nbsp;            model.setNextMessageType(MessageType.MOVE);</b>
+<b class="fc"><i>73</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>74</i>&nbsp;            model.updatePhase();</b>
+<b class="fc"><i>75</i>&nbsp;            model.updateTurn();</b>
+<b class="fc"><i>76</i>&nbsp;            model.getActualPlayer().getGodCard().turnStartHandler(controller, 0, null);</b>
+<b class="fc"><i>77</i>&nbsp;            model.increaseLevel(buildingCell, Blocks.DOME);</b>
+<b class="fc"><i>78</i>&nbsp;            return true;</b>
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;
+<b class="fc"><i>81</i>&nbsp;        return false;</b>
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     * @param usedPower is a flag that if it&#39;s set to true it means that the power has already been used.
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public void setUsedPower(boolean usedPower) {
+<b class="fc"><i>88</i>&nbsp;        this.usedPower = usedPower;</b>
+<b class="fc"><i>89</i>&nbsp;    }</b>
+<i>90</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

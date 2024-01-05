@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Board</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Board (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Board</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,7%
+  </span>
+  <span class="absValue">
+    (44/ 46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.Serializable;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * This class defines the game&#39;s board.
+<i>7</i>&nbsp; */
+<i>8</i>&nbsp;public class Board implements Serializable, Cloneable {
+<i>9</i>&nbsp;    private Cell[][] board;
+<i>10</i>&nbsp;    private final Player[] players;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    /**
+<i>13</i>&nbsp;     * This is the class&#39; constructor.
+<i>14</i>&nbsp;     * @param players are the game&#39;s players
+<i>15</i>&nbsp;     */
+<b class="fc"><i>16</i>&nbsp;    public Board(Player[] players){</b>
+<b class="fc"><i>17</i>&nbsp;        this.players = players;</b>
+<b class="fc"><i>18</i>&nbsp;        this.reset();</b>
+<b class="fc"><i>19</i>&nbsp;    }</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * @param x is the x value of the cell.
+<i>23</i>&nbsp;     * @param y is the y value of the cell.
+<i>24</i>&nbsp;     * @return the cell (x,y).
+<i>25</i>&nbsp;     * @throws IllegalArgumentException if the value &#39;x&#39; or &#39;y&#39; is higher or equal than 4 and if they are lower than 0.
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public Cell getCell(int x, int y) throws IllegalArgumentException{
+<b class="fc"><i>28</i>&nbsp;        if((x &lt; 0 || x &gt;= 5) || (y &lt; 0 || y &gt;= 5)){</b>
+<b class="fc"><i>29</i>&nbsp;            throw new IllegalArgumentException();</b>
+<i>30</i>&nbsp;        }
+<b class="fc"><i>31</i>&nbsp;        return board[x][y];</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * This method resets the board and sets all the previous cells to new ones.
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    public void reset(){
+<b class="fc"><i>38</i>&nbsp;        board=new Cell[5][5];</b>
+<b class="fc"><i>39</i>&nbsp;        for(int i = 0; i &lt; 5; i++){</b>
+<b class="fc"><i>40</i>&nbsp;            for(int j = 0; j &lt; 5; j++){</b>
+<b class="fc"><i>41</i>&nbsp;                board[i][j] = new Cell(i,j);</b>
+<i>42</i>&nbsp;            }
+<i>43</i>&nbsp;        }
+<b class="fc"><i>44</i>&nbsp;    }</b>
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * @return the board as a string.
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    public synchronized String print(){
+<b class="fc"><i>50</i>&nbsp;        StringBuilder s=new StringBuilder();</b>
+<i>51</i>&nbsp;        try {
+<b class="fc"><i>52</i>&nbsp;            s.append(&quot;         0         1         2         3         4\n&quot;);</b>
+<b class="fc"><i>53</i>&nbsp;            s.append(&quot;    ---------------------------------------------------\n&quot;);</b>
+<b class="fc"><i>54</i>&nbsp;            for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>55</i>&nbsp;                s.append(i).append(&quot;   | &quot;);</b>
+<b class="fc"><i>56</i>&nbsp;                for (int j = 0; j &lt; 5; j++) {//prima riga</b>
+<b class="fc"><i>57</i>&nbsp;                    s.append(board[j][i]).append(&quot; | &quot;);</b>
+<i>58</i>&nbsp;                }
+<b class="fc"><i>59</i>&nbsp;                s.append(&quot;\n&quot;);</b>
+<i>60</i>&nbsp;                //qui devo stampare player e worker (seconda riga)
+<b class="fc"><i>61</i>&nbsp;                s.append(&quot;    &quot;);</b>
+<b class="fc"><i>62</i>&nbsp;                for (int j = 0; j &lt; 5; j++) {</b>
+<b class="fc"><i>63</i>&nbsp;                    s.append(&quot;| &quot;);</b>
+<b class="fc"><i>64</i>&nbsp;                    if (!board[j][i].isFree()) {</b>
+<b class="fc"><i>65</i>&nbsp;                        for (int p = 0; p &lt; players.length; p++) {</b>
+<b class="fc"><i>66</i>&nbsp;                            Player player = players[p];</b>
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;                            if (player.getWorker(0).getCell().equals(board[j][i])) {</b>
+<b class="fc"><i>69</i>&nbsp;                                s.append(&quot;P:&quot;).append(p).append(&quot; W:0 &quot;);</b>
+<b class="fc"><i>70</i>&nbsp;                                break;</b>
+<b class="fc"><i>71</i>&nbsp;                            } else if (player.getWorker(1).getCell().equals(board[j][i])) {</b>
+<b class="fc"><i>72</i>&nbsp;                                s.append(&quot;P:&quot;).append(p).append(&quot; W:1 &quot;);</b>
+<b class="fc"><i>73</i>&nbsp;                                break;</b>
+<i>74</i>&nbsp;                            }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;                        }
+<i>77</i>&nbsp;                    } else {
+<b class="fc"><i>78</i>&nbsp;                        s.append(&quot;P:n W:n &quot;);</b>
+<i>79</i>&nbsp;                    }
+<i>80</i>&nbsp;                }
+<b class="fc"><i>81</i>&nbsp;                s.append(&quot;|&quot;);</b>
+<b class="fc"><i>82</i>&nbsp;                s.append(&quot;\n    ---------------------------------------------------\n&quot;);</b>
+<i>83</i>&nbsp;            }
+<b class="nc"><i>84</i>&nbsp;        }catch (Exception e) {</b>
+<b class="nc"><i>85</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>86</i>&nbsp;        }</b>
+<b class="fc"><i>87</i>&nbsp;        return s.toString();</b>
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * @return the players using this board
+<i>92</i>&nbsp;     */
+<i>93</i>&nbsp;    public Player[] getPlayers(){
+<b class="fc"><i>94</i>&nbsp;        return players;</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    /**
+<i>98</i>&nbsp;     * @return a new instance of the class as a clone
+<i>99</i>&nbsp;     * @throws CloneNotSupportedException if it can&#39;t be cloneable
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    @Override
+<i>102</i>&nbsp;    protected final Board clone() throws CloneNotSupportedException{
+<b class="fc"><i>103</i>&nbsp;        super.clone();</b>
+<b class="fc"><i>104</i>&nbsp;        final Board result = new Board(players);</b>
+<b class="fc"><i>105</i>&nbsp;        for(int i = 0; i &lt; 5; i++){</b>
+<b class="fc"><i>106</i>&nbsp;            for(int j = 0; j &lt; 5; j++)</b>
+<b class="fc"><i>107</i>&nbsp;            result.board[i][j] = (Cell) board[i][j].clone();</b>
+<i>108</i>&nbsp;        }
+<b class="fc"><i>109</i>&nbsp;        return result;</b>
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

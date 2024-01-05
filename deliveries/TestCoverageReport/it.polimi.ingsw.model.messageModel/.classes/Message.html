@@ -1,0 +1,131 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Message</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.messageModel</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Message (it.polimi.ingsw.model.messageModel)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Message</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.messageModel;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.Controller;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Player;
+<i>5</i>&nbsp;import it.polimi.ingsw.view.View;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.io.Serializable;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class in the generic abstract class for messages from the remote view to the controller
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public abstract class Message implements Serializable {
+<i>13</i>&nbsp;    protected final Player player;
+<i>14</i>&nbsp;    protected final View view;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     *
+<i>18</i>&nbsp;     * @param player is the turn player which is sending the message
+<i>19</i>&nbsp;     * @param view is the remote view instance representing the client on the server
+<i>20</i>&nbsp;     */
+<b class="fc"><i>21</i>&nbsp;    public Message(Player player, View view){</b>
+<b class="fc"><i>22</i>&nbsp;        this.player = player;</b>
+<b class="fc"><i>23</i>&nbsp;        this.view = view;</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     *
+<i>28</i>&nbsp;     * @return the player instance
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public Player getPlayer() {
+<b class="fc"><i>31</i>&nbsp;        return player;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     *
+<i>36</i>&nbsp;     * @return the view instance
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    public View getView() {
+<b class="fc"><i>39</i>&nbsp;        return view;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Abstract method which has to be overrode by subclasses
+<i>44</i>&nbsp;     * It is used to handle actions based on the message&#39;s subclass type
+<i>45</i>&nbsp;     * @param controller is the game controller instance
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    public abstract void handler(Controller controller);
+<i>48</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

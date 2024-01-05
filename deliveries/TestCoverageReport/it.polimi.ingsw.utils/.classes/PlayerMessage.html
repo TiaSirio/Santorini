@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PlayerMessage</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.utils</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PlayerMessage (it.polimi.ingsw.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlayerMessage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.utils;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Standard messages used during the play
+<i>5</i>&nbsp; */
+<b class="nc"><i>6</i>&nbsp;public class PlayerMessage {</b>
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;    /* Configuration messages */
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    public static final String WELCOME = &quot;Welcome! \nWhat&#39;s your name?&quot;;
+<i>11</i>&nbsp;    public static final String ASK_NUM_PLAYER = &quot;How many players?&quot;;
+<i>12</i>&nbsp;    public static final String GAME_MODE_SELECTOR = &quot;Press 1 to create a new lobby, press 2 to join one.&quot;;
+<i>13</i>&nbsp;    public static final String ASK_LOBBY_NAME = &quot;Insert a name for the lobby:&quot;;
+<i>14</i>&nbsp;    public static final String JOIN_LOBBY = &quot;Select which lobby you want to join: &quot;;
+<i>15</i>&nbsp;    public static final String WAIT_PLAYERS = &quot;Waiting for other players&quot;;
+<i>16</i>&nbsp;    public static final String START_PLAY = &quot;Beginning&quot;;
+<i>17</i>&nbsp;    public static final String TURN_ERROR = &quot;Error, it&#39;s not your turn.&quot;;
+<i>18</i>&nbsp;    public static final String PLAY_MODE = &quot;Would you like to play simple mode? (y/n)&quot;;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /* Playing messages */
+<i>21</i>&nbsp;    public static final String DRAW_CARD = &quot;Choose which Gods you want to use:\n&quot; +
+<i>22</i>&nbsp;            &quot;0 - APOLLO \n\tYour Worker may move into an opponent Worker’s\n&quot; +
+<i>23</i>&nbsp;            &quot;\tspace by forcing their Worker to\n&quot; +
+<i>24</i>&nbsp;            &quot;\tthe space yours just vacated.\n&quot; +
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;            &quot;1 - ARTEMIS \n\tYour Worker may move one additional time, but not\n&quot; +
+<i>27</i>&nbsp;            &quot;\tback to its initial space.\n&quot; +
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;            &quot;2 - ATHENA \n\tIf one of your Workers moved up on your last\n&quot; +
+<i>30</i>&nbsp;            &quot;\tturn, opponent Workers cannot\n&quot; +
+<i>31</i>&nbsp;            &quot;\tmove up this turn.\n&quot; +
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;            &quot;3 - ATLAS \n\tYour Worker may build a dome at any level.\n&quot; +
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;            &quot;4 - DEMETER \n\tYour Worker may build one additional time, but not\n&quot; +
+<i>36</i>&nbsp;            &quot;\ton the same space.\n&quot; +
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;            &quot;5 - HEPHAESTUS \n\tYour Worker may build one additional block (not\n&quot; +
+<i>39</i>&nbsp;            &quot;\tdome) on top of your first block.\n&quot;+
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;            &quot;6 - MINOTAUR \n\tYour Worker may move into an opponent Worker’s\n&quot; +
+<i>42</i>&nbsp;            &quot;\tspace, if their Worker can be\n&quot; +
+<i>43</i>&nbsp;            &quot;\tforced one space straight backwards to an\n&quot; +
+<i>44</i>&nbsp;            &quot;\tunoccupied space at any level.\n&quot;+
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;            &quot;7 - PAN \n\tYou also win if your Worker moves down two or\n&quot; +
+<i>47</i>&nbsp;            &quot;\tmore levels.\n&quot; +
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;            &quot;8 - PROMETHEUS \n\tIf your Worker does not move up, it may build both\n&quot; +
+<i>50</i>&nbsp;            &quot;\tbefore and after moving.\n&quot; +
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;            &quot;9 - CHRONUS \n\tYou also win when there are at least five\n&quot; +
+<i>53</i>&nbsp;            &quot;\tComplete Towers on the board.\n&quot; +
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;            &quot;10 - HESTIA \n\tYour Worker may build one additional time, but this\n&quot; +
+<i>56</i>&nbsp;            &quot;\tcannot be on a perimeter space.\n&quot; +
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;            &quot;11 - POSEIDON \n\tIf your unmoved Worker is on the ground level,\n &quot; +
+<i>59</i>&nbsp;            &quot;\tit may build up to three times.\n&quot; +
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;            &quot;12 - TRITON \n\tEach time your Worker moves into a perimeter\n&quot; +
+<i>62</i>&nbsp;            &quot;\tspace, it may immediately move again.\n&quot; +
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;            &quot;13 - ZEUS \n\tYour Worker may build a block under itself.\n&quot;;
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    public static final String PICK_CARD = &quot;Pick a card:&quot;;
+<i>69</i>&nbsp;    public static final String YOUR_TURN = &quot;It&#39;s your turn.&quot;;
+<i>70</i>&nbsp;    public static final String NOT_YOUR_TURN = &quot;&#39;s turn.&quot;;
+<i>71</i>&nbsp;    public static final String PLACE_FIRST_WORKER = &quot;Please place your first worker&quot;;
+<i>72</i>&nbsp;    public static final String PLACE_SECOND_WORKER = &quot;Please place now your second worker&quot;;
+<i>73</i>&nbsp;    public static final String MOVE = &quot;Now you can move&quot;;
+<i>74</i>&nbsp;    public static final String BUILD = &quot;Now you can build&quot;;
+<i>75</i>&nbsp;    public static final String USE_POWER = &quot;Would you like to use your God&#39;s power?(y/n)&quot;;
+<i>76</i>&nbsp;    public static final String PROMETHEUS_ASK_WORKER = &quot;Which worker would you like to move?&quot;;
+<i>77</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

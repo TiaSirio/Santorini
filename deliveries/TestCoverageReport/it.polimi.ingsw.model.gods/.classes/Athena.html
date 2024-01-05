@@ -1,0 +1,151 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Athena</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.gods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Athena (it.polimi.ingsw.model.gods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Athena</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/ 13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;
+<i>2</i>&nbsp;package it.polimi.ingsw.model.gods;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.GodCardController;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.GodCard;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.Gods;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.Model;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.Phase;
+<i>9</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerMove;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.util.ArrayList;
+<i>12</i>&nbsp;import java.util.Collections;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; This class represents Athena&#39;s GodCard
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class Athena extends GodCard {
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * {@inheritDoc}
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public Athena() {
+<b class="fc"><i>24</i>&nbsp;        super(Gods.ATHENA, Phase.MOVE);</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * This method makes the setMovedUp static boolean (contained in the Model) to true, so the other player(s) can&#39;t move up; it could only be used if the player decides to activate his power.
+<i>29</i>&nbsp;     * @param objectList contains the actual game&#39;s model (objectList.get(0)).
+<i>30</i>&nbsp;     * @see Model {@link Model} The model has the MovedUp value.
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    @Override
+<i>33</i>&nbsp;    public void usePower(List&lt;Object&gt; objectList) {
+<b class="fc"><i>34</i>&nbsp;        Model model = (Model)objectList.get(0);</b>
+<b class="fc"><i>35</i>&nbsp;        model.setMovedUp(true);</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * Before Athena performs a move, it resets the flag&#39;s value
+<i>40</i>&nbsp;     * @param model is the game&#39;s model
+<i>41</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>42</i>&nbsp;     * @param move is the move message received by the view
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    @Override
+<i>45</i>&nbsp;    public void beforeMoveHandler(Model model, GodCardController controller, PlayerMove move) {
+<b class="fc"><i>46</i>&nbsp;        model.setMovedUp(false);</b>
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * Athena&#39;s power is automatically activated. If she moved up the flag is set to true, otherwise false
+<i>51</i>&nbsp;     * @param model is the game&#39;s model
+<i>52</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>53</i>&nbsp;     * @param move is the move message received by the view
+<i>54</i>&nbsp;     * @return always true because the flag has changed
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    @Override
+<i>57</i>&nbsp;    public boolean handlerMove(Model model, GodCardController controller, PlayerMove move) {
+<b class="fc"><i>58</i>&nbsp;        if(model.getBoard().getCell(move.getRow(), move.getColumn()).getLevel().getBlockId() &gt; model.getActualPlayer().getWorker(move.getWorkerId()).getCell().getLevel().getBlockId()){</b>
+<b class="fc"><i>59</i>&nbsp;            move.getPlayer().getGodCard().usePower(new ArrayList&lt;Object&gt;(Collections.singletonList(model)));</b>
+<i>60</i>&nbsp;        }
+<i>61</i>&nbsp;        else{
+<b class="fc"><i>62</i>&nbsp;            model.setMovedUp(false);</b>
+<i>63</i>&nbsp;        }
+<b class="fc"><i>64</i>&nbsp;        model.move(move);</b>
+<b class="fc"><i>65</i>&nbsp;        model.notifyChanges();</b>
+<b class="fc"><i>66</i>&nbsp;        return true;</b>
+<i>67</i>&nbsp;    }
+<i>68</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

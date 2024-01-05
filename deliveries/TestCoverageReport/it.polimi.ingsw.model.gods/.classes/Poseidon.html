@@ -1,0 +1,233 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Poseidon</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.gods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Poseidon (it.polimi.ingsw.model.gods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Poseidon</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (51/ 51)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.gods;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.Controller;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.GodCardController;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.messageModel.MessageType;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.messageModel.PlayerBuild;
+<i>8</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * This class represents Poseidon&#39;s GodCard
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;public class Poseidon  extends GodCard {
+<i>17</i>&nbsp;    private int counter;
+<b class="fc"><i>18</i>&nbsp;    private Worker unusedWorker = null;</b>
+<b class="fc"><i>19</i>&nbsp;    private Worker movedWorker = null;</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * {@inheritDoc}
+<i>23</i>&nbsp;     */
+<i>24</i>&nbsp;    public Poseidon() {
+<b class="fc"><i>25</i>&nbsp;        super(Gods.POSEIDON, Phase.BUILD);</b>
+<b class="fc"><i>26</i>&nbsp;        counter = 0;</b>
+<b class="fc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     *
+<i>31</i>&nbsp;     * @return the number of times the player has built
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public int getNumOfBuild() {
+<b class="fc"><i>34</i>&nbsp;        return this.counter;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * Reset the build counter
+<i>39</i>&nbsp;     */
+<i>40</i>&nbsp;    public void resetBuild() {
+<b class="fc"><i>41</i>&nbsp;        counter = 0;</b>
+<b class="fc"><i>42</i>&nbsp;    }</b>
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     * This method sets a variable containing the worker not used in the turn
+<i>46</i>&nbsp;     * @param worker the worker to set
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    public void setUnusedWorker(Worker worker) {
+<b class="fc"><i>49</i>&nbsp;        this.unusedWorker = worker;</b>
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    /**
+<i>53</i>&nbsp;     *
+<i>54</i>&nbsp;     * @return the worker not used in the turn, if it exists
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    public Worker getUnusedWorker() {
+<b class="fc"><i>57</i>&nbsp;        return this.unusedWorker;</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * {@inheritDoc}
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    @Override
+<i>64</i>&nbsp;    public void usePower(List&lt;Object&gt; objectList) {
+<b class="fc"><i>65</i>&nbsp;        counter++;</b>
+<b class="fc"><i>66</i>&nbsp;        Model model = (Model) objectList.get(0);</b>
+<b class="fc"><i>67</i>&nbsp;        model.setNextPhase(getPhase());</b>
+<b class="fc"><i>68</i>&nbsp;        model.setNextPlayerMessage(PlayerMessage.BUILD);</b>
+<b class="fc"><i>69</i>&nbsp;        model.setNextMessageType(MessageType.BUILD);</b>
+<b class="fc"><i>70</i>&nbsp;        model.notifyChanges();</b>
+<b class="fc"><i>71</i>&nbsp;    }</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    /**
+<i>74</i>&nbsp;     *
+<i>75</i>&nbsp;     * @return the player&#39;s worker used in the turn
+<i>76</i>&nbsp;     */
+<i>77</i>&nbsp;    public Worker getMovedWorker() {
+<b class="fc"><i>78</i>&nbsp;        return movedWorker;</b>
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    /**
+<i>82</i>&nbsp;     * This function sets the player&#39;s worker used in the turn
+<i>83</i>&nbsp;     * @param movedWorker the used worker
+<i>84</i>&nbsp;     */
+<i>85</i>&nbsp;    public void setMovedWorker(Worker movedWorker) {
+<b class="fc"><i>86</i>&nbsp;        this.movedWorker = movedWorker;</b>
+<b class="fc"><i>87</i>&nbsp;    }</b>
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    /**
+<i>90</i>&nbsp;     * This method modifies the normal build control.
+<i>91</i>&nbsp;     * Poseidon can build up to three more time with the worker he hasn&#39;t used, but only if that worker is at level 0 cell
+<i>92</i>&nbsp;     * If this is the first time the player builds, the used worker is set, and the unused one is computed and set (the same parameter is set in the player&#39;s instance)
+<i>93</i>&nbsp;     * After the first build, if the unused worker is at the level 0 and it didn&#39;t already build three times, it asks the player if he wants to use the god&#39;s power
+<i>94</i>&nbsp;     * Whenever one of the condition results false, the normal game flow is set and the flag reset
+<i>95</i>&nbsp;     * @param model is the game&#39;s model
+<i>96</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>97</i>&nbsp;     * @param build is the message received from the view
+<i>98</i>&nbsp;     * @param buildingCell is the cell where the player wants to build
+<i>99</i>&nbsp;     * @return true if the unused worker is at level 0 and it didn&#39;t build three times, false otherwise
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    @Override
+<i>102</i>&nbsp;    public boolean handlerBuild(Model model, GodCardController controller, PlayerBuild build, Cell buildingCell) {
+<b class="fc"><i>103</i>&nbsp;        if(getMovedWorker()==null){</b>
+<b class="fc"><i>104</i>&nbsp;            setMovedWorker(build.getPlayer().getWorker(build.getWorkerId()));</b>
+<b class="fc"><i>105</i>&nbsp;            setUnusedWorker(build.getPlayer().getWorker((build.getWorkerId()+1)%2));</b>
+<b class="fc"><i>106</i>&nbsp;            build.getPlayer().setUsedWorker((build.getWorkerId()+1)%2);</b>
+<i>107</i>&nbsp;        }
+<b class="fc"><i>108</i>&nbsp;        ArrayList&lt;Cell&gt; availableCell=checkCanBuild(getUnusedWorker(), controller);</b>
+<b class="fc"><i>109</i>&nbsp;        boolean check=true;</b>
+<b class="fc"><i>110</i>&nbsp;        if(availableCell.size()==1){</b>
+<b class="fc"><i>111</i>&nbsp;            if(availableCell.get(0).getLevel()==Blocks.LEVEL3 &amp;&amp; buildingCell == availableCell.get(0)){</b>
+<b class="fc"><i>112</i>&nbsp;                check=false;</b>
+<i>113</i>&nbsp;            }
+<i>114</i>&nbsp;        }
+<i>115</i>&nbsp;        //se non ho costruito già 3 volte e se il worker inutilizzato e&#39; al livello 0 e se il worker inutilizzato puo costruire
+<b class="fc"><i>116</i>&nbsp;        if(getNumOfBuild()&lt;3 &amp;&amp; getUnusedWorker().getCell().getLevel().getBlockId()==0 &amp;&amp; availableCell.size()&gt;0 &amp;&amp; check) {</b>
+<b class="fc"><i>117</i>&nbsp;            model.setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="fc"><i>118</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="fc"><i>119</i>&nbsp;            model.setNextMessageType(MessageType.USE_POWER);</b>
+<b class="fc"><i>120</i>&nbsp;            controller.godIncreaseLevel(buildingCell.getLevel().getBlockId(), buildingCell);</b>
+<b class="fc"><i>121</i>&nbsp;            return true;</b>
+<i>122</i>&nbsp;        }
+<i>123</i>&nbsp;
+<b class="fc"><i>124</i>&nbsp;        setUnusedWorker(null);</b>
+<b class="fc"><i>125</i>&nbsp;        setMovedWorker(null);</b>
+<b class="fc"><i>126</i>&nbsp;        resetBuild();</b>
+<b class="fc"><i>127</i>&nbsp;        return false;</b>
+<i>128</i>&nbsp;
+<i>129</i>&nbsp;
+<i>130</i>&nbsp;    }
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * When the player doesn&#39;t want to use the power, the model keeps the usual flow, it then updates the turn and resets the flags
+<i>134</i>&nbsp;     * @param phase is the god card&#39;s phase given by the controller
+<i>135</i>&nbsp;     * @param controller is the game&#39;s controller
+<i>136</i>&nbsp;     */
+<i>137</i>&nbsp;    @Override
+<i>138</i>&nbsp;    public void performGodMessageForPhaseWithNegativeAnswer(Phase phase, Controller controller) {
+<b class="fc"><i>139</i>&nbsp;        Model model = controller.getModel();</b>
+<b class="fc"><i>140</i>&nbsp;            setMovedWorker(null);</b>
+<b class="fc"><i>141</i>&nbsp;            setUnusedWorker(null);</b>
+<b class="fc"><i>142</i>&nbsp;            resetBuild();</b>
+<b class="fc"><i>143</i>&nbsp;            model.setNextPhase(Phase.MOVE);</b>
+<b class="fc"><i>144</i>&nbsp;            model.setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>145</i>&nbsp;            model.setNextMessageType(MessageType.MOVE);</b>
+<b class="fc"><i>146</i>&nbsp;            model.updateTurn();</b>
+<b class="fc"><i>147</i>&nbsp;            model.getActualPlayer().getGodCard().turnStartHandler((GodCardController) controller, 0, null);</b>
+<b class="fc"><i>148</i>&nbsp;            model.notifyChanges();</b>
+<b class="fc"><i>149</i>&nbsp;    }</b>
+<i>150</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>

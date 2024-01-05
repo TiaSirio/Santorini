@@ -1,0 +1,584 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Model</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Model (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Model</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (38/ 38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92%
+  </span>
+  <span class="absValue">
+    (162/ 176)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.messageModel.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.gods.Prometheus;
+<i>5</i>&nbsp;import it.polimi.ingsw.observer.Observable;
+<i>6</i>&nbsp;import it.polimi.ingsw.utils.PlayerMessage;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.EnumMap;
+<i>10</i>&nbsp;import java.util.HashMap;
+<i>11</i>&nbsp;import java.util.Map;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * This class merges all the game&#39;s data
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;public class Model extends Observable&lt;ViewMessage&gt; {
+<i>18</i>&nbsp;    private Board board;
+<i>19</i>&nbsp;    private final Player[] turn;
+<b class="fc"><i>20</i>&nbsp;    private int id = 0;</b>
+<b class="fc"><i>21</i>&nbsp;    private int leftPlayers, playersWhoWon = 0, playersWhoLost = 0;</b>
+<i>22</i>&nbsp;    private final boolean simplePlay;
+<b class="fc"><i>23</i>&nbsp;    private Phase phase = Phase.DRAWCARD;</b>
+<b class="fc"><i>24</i>&nbsp;    private final Map&lt;Gods, Player&gt; playerCards = new EnumMap&lt;&gt;(Gods.class);</b>
+<b class="fc"><i>25</i>&nbsp;    private final ArrayList&lt;GodCard&gt; gods = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>26</i>&nbsp;    private final ArrayList&lt;GodCard&gt; godsInPlay = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>27</i>&nbsp;    private boolean movedUp = false;</b>
+<b class="fc"><i>28</i>&nbsp;    private MessageType messageType = MessageType.DRAW_CARD;</b>
+<b class="fc"><i>29</i>&nbsp;    private String playerMessage = PlayerMessage.DRAW_CARD;</b>
+<b class="fc"><i>30</i>&nbsp;    private final HashMap&lt;Player, Integer&gt; podium = new HashMap&lt;&gt;();</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     *Class&#39; constructor
+<i>34</i>&nbsp;     * @param players represents the actual game&#39;s players.
+<i>35</i>&nbsp;     * @param simplePlay is a boolean: if it&#39;s set to true it means that the game is played without godCard (SimpleMode mode).
+<i>36</i>&nbsp;     */
+<b class="fc"><i>37</i>&nbsp;    public Model(Player[] players, boolean simplePlay){</b>
+<b class="fc"><i>38</i>&nbsp;        this.turn = players;</b>
+<b class="fc"><i>39</i>&nbsp;        this.simplePlay = simplePlay;</b>
+<b class="fc"><i>40</i>&nbsp;        this.board= new Board(this.turn);</b>
+<b class="fc"><i>41</i>&nbsp;        leftPlayers = players.length;</b>
+<b class="fc"><i>42</i>&nbsp;        if(simplePlay){</b>
+<b class="fc"><i>43</i>&nbsp;            this.phase = Phase.SETWORKER1;</b>
+<b class="fc"><i>44</i>&nbsp;            this.messageType = MessageType.SET_WORKER_1;</b>
+<b class="fc"><i>45</i>&nbsp;            this.playerMessage = PlayerMessage.PLACE_FIRST_WORKER;</b>
+<i>46</i>&nbsp;        }
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * This method configures the model and the phases of the actual game. This method also notifies every players that the game ios starting.
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    public void initialize(){
+<b class="fc"><i>53</i>&nbsp;        notifyObservers(new GameMessage(turn[id], PlayerMessage.YOUR_TURN, MessageType.BEGINNING, Phase.BEGINNING));</b>
+<b class="fc"><i>54</i>&nbsp;        notifyObservers(new GameBoardMessage(getBoardClone(), turn[id], this.playerMessage, this.messageType, this.phase));</b>
+<i>55</i>&nbsp;
+<b class="fc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * @return true if Athena&#39;s player has moved up during his/her turn.
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    public boolean isMovedUp() {
+<b class="fc"><i>62</i>&nbsp;        return movedUp;</b>
+<i>63</i>&nbsp;    }
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     * @param movedUp is automatically set to true by Athena when she uses her power (she goes up one level). This value remains true until the beginning of Athena&#39;s turn.
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    public void setMovedUp(boolean movedUp) {
+<b class="fc"><i>69</i>&nbsp;        this.movedUp = movedUp;</b>
+<b class="fc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * This function resets the board, creating a new different Board. It&#39;s used when we want to start another game.
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public void resetBoard(){
+<b class="fc"><i>76</i>&nbsp;        this.board = new Board(turn);</b>
+<b class="fc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * @return true if the mode of the actual game is set to SimpleMode.
+<i>81</i>&nbsp;     */
+<i>82</i>&nbsp;    public boolean isSimplePlay() {
+<b class="fc"><i>83</i>&nbsp;        return simplePlay;</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    /**
+<i>87</i>&nbsp;     * @param p is a player of the game.
+<i>88</i>&nbsp;     * @return true if this turn is the turn of the player p.
+<i>89</i>&nbsp;     */
+<i>90</i>&nbsp;    public boolean isPlayerTurn(Player p){
+<b class="fc"><i>91</i>&nbsp;        return this.turn[id] == p;</b>
+<i>92</i>&nbsp;    }
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    /**
+<i>95</i>&nbsp;     * This method sets the game&#39;s next phase.
+<i>96</i>&nbsp;     * @param phase represent a phase of the game.
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    public void setNextPhase(Phase phase) {
+<b class="fc"><i>99</i>&nbsp;        this.phase = phase;</b>
+<b class="fc"><i>100</i>&nbsp;    }</b>
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;    /**
+<i>103</i>&nbsp;     * @return the turn player&#39;s id (the id is used in the array turn[]).
+<i>104</i>&nbsp;     */
+<i>105</i>&nbsp;    public int getActualPlayerId() {
+<b class="fc"><i>106</i>&nbsp;        return id;</b>
+<i>107</i>&nbsp;    }
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;    /**
+<i>110</i>&nbsp;     * @return an array of players containing every actual game&#39;s players.
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    public Player[] getPlayers(){
+<b class="fc"><i>113</i>&nbsp;        return turn;</b>
+<i>114</i>&nbsp;    }
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;    /**
+<i>117</i>&nbsp;     *
+<i>118</i>&nbsp;     * @return the active gods card in the game.
+<i>119</i>&nbsp;     */
+<i>120</i>&nbsp;    public ArrayList&lt;GodCard&gt; getGodsInPlay() {
+<b class="fc"><i>121</i>&nbsp;        return godsInPlay;</b>
+<i>122</i>&nbsp;    }
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;    /**
+<i>125</i>&nbsp;     *
+<i>126</i>&nbsp;     * @return the number of players who didn&#39;t win/loose yet.
+<i>127</i>&nbsp;     */
+<i>128</i>&nbsp;    public int getLeftPlayers(){
+<b class="fc"><i>129</i>&nbsp;        return leftPlayers;</b>
+<i>130</i>&nbsp;    }
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * @return the number of players in the actual game.
+<i>134</i>&nbsp;     */
+<i>135</i>&nbsp;    public int getNumOfPlayers(){
+<b class="fc"><i>136</i>&nbsp;        return this.turn.length;</b>
+<i>137</i>&nbsp;    }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    /**
+<i>140</i>&nbsp;     * This function sets the next phase message type that needs to be notified to the clients
+<i>141</i>&nbsp;     * @param messageType is the MessageType enum instance to set
+<i>142</i>&nbsp;     */
+<i>143</i>&nbsp;    public void setNextMessageType(MessageType messageType) {
+<b class="fc"><i>144</i>&nbsp;        this.messageType = messageType;</b>
+<b class="fc"><i>145</i>&nbsp;    }</b>
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    /**
+<i>148</i>&nbsp;     *
+<i>149</i>&nbsp;     * @param playerMessage is a string representing the next message that needs to be notified to the clients
+<i>150</i>&nbsp;     */
+<i>151</i>&nbsp;    public void setNextPlayerMessage(String playerMessage) {
+<b class="fc"><i>152</i>&nbsp;        this.playerMessage = playerMessage;</b>
+<b class="fc"><i>153</i>&nbsp;    }</b>
+<i>154</i>&nbsp;
+<i>155</i>&nbsp;    /**
+<i>156</i>&nbsp;     * @return the actual game&#39;s board.
+<i>157</i>&nbsp;     */
+<i>158</i>&nbsp;    public Board getBoard() {
+<b class="fc"><i>159</i>&nbsp;        return board;</b>
+<i>160</i>&nbsp;    }
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    /**
+<i>163</i>&nbsp;     * This method returns a clone of the board.
+<i>164</i>&nbsp;     * @return a clone of the board.
+<i>165</i>&nbsp;     */
+<i>166</i>&nbsp;    public Board getBoardClone() {
+<i>167</i>&nbsp;        try{
+<b class="fc"><i>168</i>&nbsp;            return board.clone();</b>
+<b class="nc"><i>169</i>&nbsp;        }catch (Exception e){</b>
+<b class="nc"><i>170</i>&nbsp;            e.printStackTrace();</b>
+<i>171</i>&nbsp;        }
+<b class="nc"><i>172</i>&nbsp;        return null;</b>
+<i>173</i>&nbsp;    }
+<i>174</i>&nbsp;
+<i>175</i>&nbsp;    /**
+<i>176</i>&nbsp;     * This function is used to update the turn with the order in which the players join the game.
+<i>177</i>&nbsp;     * If a player has won or lost he is skipped
+<i>178</i>&nbsp;     */
+<i>179</i>&nbsp;    public synchronized void updateTurn(){
+<b class="fc"><i>180</i>&nbsp;        id = (id + 1) % (turn.length);</b>
+<i>181</i>&nbsp;
+<b class="fc"><i>182</i>&nbsp;        if(turn[id].hasWon() &amp;&amp; turn.length == 3){</b>
+<b class="fc"><i>183</i>&nbsp;            updateTurn();</b>
+<i>184</i>&nbsp;        }
+<b class="fc"><i>185</i>&nbsp;        if(turn[id].getHasLost() &amp;&amp; turn.length == 3){</b>
+<b class="nc"><i>186</i>&nbsp;            updateTurn();</b>
+<i>187</i>&nbsp;        }
+<i>188</i>&nbsp;        try{
+<b class="fc"><i>189</i>&nbsp;            if(!turn[id].getWorker(0).getStatus() &amp;&amp; !turn[id].getWorker(1).getStatus()){</b>
+<b class="nc"><i>190</i>&nbsp;                loose(turn[id]);</b>
+<i>191</i>&nbsp;            }
+<b class="fc"><i>192</i>&nbsp;        }catch(IndexOutOfBoundsException e){</b>
+<i>193</i>&nbsp;            //e.printStackTrace();
+<b class="fc"><i>194</i>&nbsp;        }</b>
+<i>195</i>&nbsp;
+<b class="fc"><i>196</i>&nbsp;        notifyObservers(new GameMessage(turn[id], PlayerMessage.YOUR_TURN, MessageType.BEGINNING, Phase.BEGINNING));</b>
+<b class="fc"><i>197</i>&nbsp;    }</b>
+<i>198</i>&nbsp;
+<i>199</i>&nbsp;    /**
+<i>200</i>&nbsp;     *
+<i>201</i>&nbsp;     * @return the actual phase of the game.
+<i>202</i>&nbsp;     */
+<i>203</i>&nbsp;    public Phase getPhase() {
+<b class="fc"><i>204</i>&nbsp;        return phase;</b>
+<i>205</i>&nbsp;    }
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;    /**
+<i>208</i>&nbsp;     * This method updates the phase of the actual game.
+<i>209</i>&nbsp;     * @see Phase {@link Phase} In the phase is contained the next() method.
+<i>210</i>&nbsp;     */
+<i>211</i>&nbsp;    public void updatePhase(){
+<b class="fc"><i>212</i>&nbsp;        phase = Phase.next(phase);</b>
+<b class="fc"><i>213</i>&nbsp;    }</b>
+<i>214</i>&nbsp;
+<i>215</i>&nbsp;    /**
+<i>216</i>&nbsp;     * This method is used to add a new worker for a player.
+<i>217</i>&nbsp;     * It gets the cell inside the board with the coordinates given to it,
+<i>218</i>&nbsp;     * it then sets the cell as used.
+<i>219</i>&nbsp;     * I adds a new worker for the player who ask for it (contained in the message) and
+<i>220</i>&nbsp;     * at the end it notifies the clients about the changes
+<i>221</i>&nbsp;     * @param playerWorker is the message received from the remote view
+<i>222</i>&nbsp;     */
+<i>223</i>&nbsp;    public void setPlayerWorker (PlayerWorker playerWorker){
+<b class="fc"><i>224</i>&nbsp;        Cell chosenCell = this.getBoard().getCell(playerWorker.getX(), playerWorker.getY());</b>
+<b class="fc"><i>225</i>&nbsp;        chosenCell.useCell();</b>
+<b class="fc"><i>226</i>&nbsp;        playerWorker.getPlayer().setWorkers(new Worker(chosenCell));</b>
+<b class="fc"><i>227</i>&nbsp;        notifyChanges();</b>
+<b class="fc"><i>228</i>&nbsp;    }</b>
+<i>229</i>&nbsp;
+<i>230</i>&nbsp;    /**
+<i>231</i>&nbsp;     * @return the turn player&#39;s instance.
+<i>232</i>&nbsp;     */
+<i>233</i>&nbsp;    public Player getActualPlayer() {
+<b class="fc"><i>234</i>&nbsp;        return turn[id];</b>
+<i>235</i>&nbsp;    }
+<i>236</i>&nbsp;
+<i>237</i>&nbsp;    /**
+<i>238</i>&nbsp;     * This method adds a chosen god card to the game Array
+<i>239</i>&nbsp;     * This method also adds the godCard to the godsInPlay array
+<i>240</i>&nbsp;     * @param godCard is the chosen god card instance
+<i>241</i>&nbsp;     */
+<i>242</i>&nbsp;    public void addGod(GodCard godCard){
+<b class="fc"><i>243</i>&nbsp;        gods.add(godCard);</b>
+<b class="fc"><i>244</i>&nbsp;        godsInPlay.add(godCard);</b>
+<b class="fc"><i>245</i>&nbsp;    }</b>
+<i>246</i>&nbsp;
+<i>247</i>&nbsp;    /**
+<i>248</i>&nbsp;     *
+<i>249</i>&nbsp;     * @return game&#39;s gods as an array
+<i>250</i>&nbsp;     */
+<i>251</i>&nbsp;    public ArrayList&lt;GodCard&gt; getGods() {
+<b class="fc"><i>252</i>&nbsp;        return gods;</b>
+<i>253</i>&nbsp;    }
+<i>254</i>&nbsp;
+<i>255</i>&nbsp;    /**
+<i>256</i>&nbsp;     *
+<i>257</i>&nbsp;     * @param i is an int representing the value of a player in turn[].
+<i>258</i>&nbsp;     * @return the corresponding player instance in turn[i].
+<i>259</i>&nbsp;     */
+<i>260</i>&nbsp;    public Player getPlayer(int i){
+<b class="fc"><i>261</i>&nbsp;        return turn[i];</b>
+<i>262</i>&nbsp;    }
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;    /**
+<i>265</i>&nbsp;     *
+<i>266</i>&nbsp;     * @return the number of god cards left to choose.
+<i>267</i>&nbsp;     */
+<i>268</i>&nbsp;    public int getLeftCards(){
+<b class="fc"><i>269</i>&nbsp;        return gods.size();</b>
+<i>270</i>&nbsp;    }
+<i>271</i>&nbsp;
+<i>272</i>&nbsp;    /**
+<i>273</i>&nbsp;     *
+<i>274</i>&nbsp;     * @param card an integer representing the card&#39;s index in the array
+<i>275</i>&nbsp;     * @return true if the selected index is available in the array
+<i>276</i>&nbsp;     */
+<i>277</i>&nbsp;    public boolean isGodAvailable(int card){
+<b class="fc"><i>278</i>&nbsp;        return gods.size() &gt;= card + 1;</b>
+<i>279</i>&nbsp;    }
+<i>280</i>&nbsp;
+<i>281</i>&nbsp;    /**
+<i>282</i>&nbsp;     * This method returns the Player owning a specific GodCard (gods). This method returns null if there are no player associated to that specific card.
+<i>283</i>&nbsp;     * @param gods is the GodCard involved.
+<i>284</i>&nbsp;     * @return the player associated.
+<i>285</i>&nbsp;     */
+<i>286</i>&nbsp;    public Player getGCPlayer(Gods gods){
+<b class="fc"><i>287</i>&nbsp;        return playerCards.get(gods);</b>
+<i>288</i>&nbsp;    }
+<i>289</i>&nbsp;
+<i>290</i>&nbsp;    /**
+<i>291</i>&nbsp;     * This method is used to get the next turn player&#39;s GodCard
+<i>292</i>&nbsp;     * @return the GodCard instance of the next turn player
+<i>293</i>&nbsp;     */
+<i>294</i>&nbsp;    public GodCard getNextPlayerGC(){
+<b class="fc"><i>295</i>&nbsp;        int next=(id+1)%(turn.length);</b>
+<b class="fc"><i>296</i>&nbsp;        if(turn[next].hasWon() || turn[next].getHasLost()){</b>
+<b class="nc"><i>297</i>&nbsp;            next=(next+1)%(turn.length);</b>
+<i>298</i>&nbsp;        }
+<b class="fc"><i>299</i>&nbsp;        return turn[next].getGodCard();</b>
+<i>300</i>&nbsp;    }
+<i>301</i>&nbsp;
+<i>302</i>&nbsp;    /**
+<i>303</i>&nbsp;     * This method is used to assign a GodCard to a player
+<i>304</i>&nbsp;     * @param player is the player who picked the card within the drawed ones
+<i>305</i>&nbsp;     * @param card is the drawed card&#39;s array index chosen by the player
+<i>306</i>&nbsp;     * @return the GodCard&#39;s instance of the chosen card
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;    public GodCard assignCard(Player player, int card){
+<b class="fc"><i>309</i>&nbsp;        GodCard godCard = gods.get(card);</b>
+<b class="fc"><i>310</i>&nbsp;        gods.remove(card);</b>
+<b class="fc"><i>311</i>&nbsp;        gods.trimToSize();</b>
+<b class="fc"><i>312</i>&nbsp;        player.setGodCard(godCard);</b>
+<b class="fc"><i>313</i>&nbsp;        playerCards.put(godCard.getCardGod(), player);</b>
+<b class="fc"><i>314</i>&nbsp;        return godCard;</b>
+<i>315</i>&nbsp;    }
+<i>316</i>&nbsp;
+<i>317</i>&nbsp;
+<i>318</i>&nbsp;    /**
+<i>319</i>&nbsp;     * This method is called by the controller to update data for a move event
+<i>320</i>&nbsp;     * @param move is the message received from the controller (which received it from the client)
+<i>321</i>&nbsp;     * @throws ArrayIndexOutOfBoundsException when you try to move outside of the board
+<i>322</i>&nbsp;     */
+<i>323</i>&nbsp;    public void move(PlayerMove move) throws ArrayIndexOutOfBoundsException {
+<b class="fc"><i>324</i>&nbsp;        Worker movingWorker = move.getPlayer().getWorker(move.getWorkerId());</b>
+<b class="fc"><i>325</i>&nbsp;        movingWorker.getCell().freeCell();</b>
+<b class="fc"><i>326</i>&nbsp;        movingWorker.setCell(this.getBoard().getCell(move.getRow(), move.getColumn()));</b>
+<b class="fc"><i>327</i>&nbsp;        this.getBoard().getCell(move.getRow(), move.getColumn()).useCell();</b>
+<b class="fc"><i>328</i>&nbsp;        getActualPlayer().setUsedWorker(move.getWorkerId());</b>
+<i>329</i>&nbsp;        //notifyChanges();
+<b class="fc"><i>330</i>&nbsp;    }</b>
+<i>331</i>&nbsp;
+<i>332</i>&nbsp;    /**
+<i>333</i>&nbsp;     * This function is called by the controller to update data for a build event
+<i>334</i>&nbsp;     * @see Cell
+<i>335</i>&nbsp;     * @param cell is the cell chosen for the built
+<i>336</i>&nbsp;     * @param level is the level that needs to be assigned to the cell
+<i>337</i>&nbsp;     */
+<i>338</i>&nbsp;    public void increaseLevel(Cell cell, Blocks level) {//build
+<b class="fc"><i>339</i>&nbsp;        cell.setLevel(level);</b>
+<b class="fc"><i>340</i>&nbsp;        notifyChanges();</b>
+<b class="fc"><i>341</i>&nbsp;    }</b>
+<i>342</i>&nbsp;
+<i>343</i>&nbsp;    /**
+<i>344</i>&nbsp;     * This method adds a player who won to the podium,
+<i>345</i>&nbsp;     * then, if only one player is left, it calls the loose for the player who lost.
+<i>346</i>&nbsp;     * If more than one player is left, remove the player workers from the board and set the player victory flag to true
+<i>347</i>&nbsp;     * At the end, ut updates the model phases and messages and notifies the changes to the clients
+<i>348</i>&nbsp;     * @param player the player who won
+<i>349</i>&nbsp;     */
+<i>350</i>&nbsp;    public void victory(Player player) {
+<b class="fc"><i>351</i>&nbsp;        player.setVictory(true);</b>
+<b class="fc"><i>352</i>&nbsp;        playersWhoWon++;</b>
+<b class="fc"><i>353</i>&nbsp;        ViewMessage win = new GameMessage(turn[id], &quot;Player: &quot; + player.getPlayerName() + &quot; has won!!!!&quot;, MessageType.VICTORY, this.phase);</b>
+<b class="fc"><i>354</i>&nbsp;        notifyObservers(win);</b>
+<b class="fc"><i>355</i>&nbsp;        podium.put(player, playersWhoWon);</b>
+<b class="fc"><i>356</i>&nbsp;        if(!isSimplePlay()){</b>
+<b class="fc"><i>357</i>&nbsp;            if(player.getGodCard().getCardGod()== Gods.ATHENA){</b>
+<b class="nc"><i>358</i>&nbsp;                setMovedUp(false);</b>
+<i>359</i>&nbsp;            }
+<i>360</i>&nbsp;        }
+<b class="fc"><i>361</i>&nbsp;        if(leftPlayers == 2){</b>
+<b class="fc"><i>362</i>&nbsp;            for (Player value : turn) {</b>
+<b class="fc"><i>363</i>&nbsp;                if (!value.getHasLost() &amp;&amp; !value.hasWon() &amp;&amp; value != player) {</b>
+<b class="fc"><i>364</i>&nbsp;                    loose(value);</b>
+<b class="fc"><i>365</i>&nbsp;                    return;</b>
+<i>366</i>&nbsp;                }
+<i>367</i>&nbsp;            }
+<b class="fc"><i>368</i>&nbsp;            endGame();</b>
+<i>369</i>&nbsp;        }
+<i>370</i>&nbsp;        else{
+<b class="fc"><i>371</i>&nbsp;            leftPlayers--;</b>
+<b class="fc"><i>372</i>&nbsp;            player.remove();</b>
+<i>373</i>&nbsp;
+<b class="fc"><i>374</i>&nbsp;                if(turn[id]==player){</b>
+<b class="fc"><i>375</i>&nbsp;                    updateTurn();</b>
+<b class="fc"><i>376</i>&nbsp;                    if(getActualPlayer()==getGCPlayer(Gods.PROMETHEUS) &amp;&amp; !((Prometheus)getGCPlayer(Gods.PROMETHEUS).getGodCard()).hasBuilt()){</b>
+<b class="nc"><i>377</i>&nbsp;                        setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="nc"><i>378</i>&nbsp;                        setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="nc"><i>379</i>&nbsp;                        setNextMessageType(MessageType.USE_POWER);</b>
+<i>380</i>&nbsp;                    }
+<i>381</i>&nbsp;                    else{
+<b class="fc"><i>382</i>&nbsp;                        setNextPhase(Phase.MOVE);</b>
+<b class="fc"><i>383</i>&nbsp;                        setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>384</i>&nbsp;                        setNextMessageType(MessageType.MOVE);</b>
+<i>385</i>&nbsp;                    }
+<i>386</i>&nbsp;                }
+<i>387</i>&nbsp;
+<b class="fc"><i>388</i>&nbsp;            notifyChanges();</b>
+<i>389</i>&nbsp;        }
+<i>390</i>&nbsp;
+<b class="fc"><i>391</i>&nbsp;    }</b>
+<i>392</i>&nbsp;
+<i>393</i>&nbsp;    /**
+<i>394</i>&nbsp;     * This method adds a player who lost to the podium at the last position,
+<i>395</i>&nbsp;     * then, if only one player is left, it calls victory for that player.
+<i>396</i>&nbsp;     * If more than one player is left, it removes the player&#39;s workers from the board and sets the player lost flag to true
+<i>397</i>&nbsp;     * At the end it updates the model&#39;s phases and messages and notifies the changes to the clients
+<i>398</i>&nbsp;     * @param player the player who lost
+<i>399</i>&nbsp;     */
+<i>400</i>&nbsp;    public void loose(Player player){
+<b class="fc"><i>401</i>&nbsp;        player.setHasLost(true);</b>
+<b class="fc"><i>402</i>&nbsp;        if(!isSimplePlay()){</b>
+<b class="fc"><i>403</i>&nbsp;            if(player.getGodCard().getCardGod()== Gods.ATHENA){</b>
+<b class="nc"><i>404</i>&nbsp;                setMovedUp(false);</b>
+<i>405</i>&nbsp;            }
+<i>406</i>&nbsp;        }
+<b class="fc"><i>407</i>&nbsp;        ViewMessage loose = new GameMessage(turn[id], &quot;Player: &quot; + player.getPlayerName() + &quot; has lost. Retry, you&#39;ll have more luck&quot;, MessageType.LOSE, this.phase);</b>
+<b class="fc"><i>408</i>&nbsp;        notifyObservers(loose);</b>
+<b class="fc"><i>409</i>&nbsp;        podium.put(player, getNumOfPlayers()-playersWhoLost);</b>
+<b class="fc"><i>410</i>&nbsp;        playersWhoLost++;</b>
+<b class="fc"><i>411</i>&nbsp;        if(leftPlayers == 3){</b>
+<b class="fc"><i>412</i>&nbsp;            leftPlayers--;</b>
+<b class="fc"><i>413</i>&nbsp;            player.remove();</b>
+<i>414</i>&nbsp;
+<b class="fc"><i>415</i>&nbsp;                if(turn[id]==player){</b>
+<b class="fc"><i>416</i>&nbsp;                    updateTurn();</b>
+<b class="fc"><i>417</i>&nbsp;                    if(getActualPlayer()==getGCPlayer(Gods.PROMETHEUS) &amp;&amp; !((Prometheus)getGCPlayer(Gods.PROMETHEUS).getGodCard()).hasBuilt()){</b>
+<b class="nc"><i>418</i>&nbsp;                        setNextPhase(Phase.WAIT_GOD_ANSWER);</b>
+<b class="nc"><i>419</i>&nbsp;                        setNextPlayerMessage(PlayerMessage.USE_POWER);</b>
+<b class="nc"><i>420</i>&nbsp;                        setNextMessageType(MessageType.USE_POWER);</b>
+<i>421</i>&nbsp;                    }
+<i>422</i>&nbsp;                    else{
+<b class="fc"><i>423</i>&nbsp;                        setNextPhase(Phase.MOVE);</b>
+<b class="fc"><i>424</i>&nbsp;                        setNextPlayerMessage(PlayerMessage.MOVE);</b>
+<b class="fc"><i>425</i>&nbsp;                        setNextMessageType(MessageType.MOVE);</b>
+<i>426</i>&nbsp;                    }
+<i>427</i>&nbsp;                }
+<b class="fc"><i>428</i>&nbsp;            notifyChanges();</b>
+<i>429</i>&nbsp;        }
+<i>430</i>&nbsp;        else{
+<b class="fc"><i>431</i>&nbsp;            for (Player value : turn) {</b>
+<b class="fc"><i>432</i>&nbsp;                if (!value.hasWon() &amp;&amp; !value.getHasLost() &amp;&amp; value != player) {</b>
+<b class="fc"><i>433</i>&nbsp;                    victory(value);</b>
+<b class="fc"><i>434</i>&nbsp;                    return;</b>
+<i>435</i>&nbsp;                }
+<i>436</i>&nbsp;            }
+<b class="fc"><i>437</i>&nbsp;            endGame();</b>
+<i>438</i>&nbsp;        }
+<i>439</i>&nbsp;
+<b class="fc"><i>440</i>&nbsp;    }</b>
+<i>441</i>&nbsp;
+<i>442</i>&nbsp;    /**
+<i>443</i>&nbsp;     * This function sets the game&#39;s phase to END_GAME
+<i>444</i>&nbsp;     * This function is called when only one player is left
+<i>445</i>&nbsp;     * It notifies the clients that the game is ended
+<i>446</i>&nbsp;     */
+<i>447</i>&nbsp;    public void endGame(){
+<b class="fc"><i>448</i>&nbsp;        phase = Phase.END_GAME;</b>
+<b class="fc"><i>449</i>&nbsp;        ViewMessage end = new EndGameMessage(turn[id], &quot;The game has ended.\nDo you want to play again?(y/n)\n&quot;, MessageType.END_GAME, this.phase,podium);</b>
+<b class="fc"><i>450</i>&nbsp;        notifyObservers(end);</b>
+<b class="fc"><i>451</i>&nbsp;    }</b>
+<i>452</i>&nbsp;
+<i>453</i>&nbsp;    /**
+<i>454</i>&nbsp;     * This method resets every model&#39;s parameters to start a new game and calls the model&#39;s &quot;initialize&quot; function
+<i>455</i>&nbsp;     * startOver is called only if every player has chosen to play again
+<i>456</i>&nbsp;     *
+<i>457</i>&nbsp;     */
+<i>458</i>&nbsp;    public void startOver(){
+<b class="fc"><i>459</i>&nbsp;        resetBoard();</b>
+<b class="fc"><i>460</i>&nbsp;        podium.clear();</b>
+<b class="fc"><i>461</i>&nbsp;        leftPlayers = turn.length;</b>
+<b class="fc"><i>462</i>&nbsp;        this.movedUp=false;</b>
+<b class="fc"><i>463</i>&nbsp;        if(simplePlay){</b>
+<b class="fc"><i>464</i>&nbsp;            this.phase = Phase.SETWORKER1;</b>
+<b class="fc"><i>465</i>&nbsp;            this.messageType = MessageType.SET_WORKER_1;</b>
+<b class="fc"><i>466</i>&nbsp;            this.playerMessage = PlayerMessage.PLACE_FIRST_WORKER;</b>
+<i>467</i>&nbsp;        }
+<i>468</i>&nbsp;        else{
+<b class="fc"><i>469</i>&nbsp;            playerCards.clear();</b>
+<b class="fc"><i>470</i>&nbsp;            godsInPlay.clear();</b>
+<b class="fc"><i>471</i>&nbsp;            gods.clear();</b>
+<b class="fc"><i>472</i>&nbsp;            this.phase = Phase.DRAWCARD;</b>
+<b class="fc"><i>473</i>&nbsp;            this.messageType = MessageType.DRAW_CARD;</b>
+<b class="fc"><i>474</i>&nbsp;            this.playerMessage = PlayerMessage.DRAW_CARD;</b>
+<i>475</i>&nbsp;        }
+<b class="fc"><i>476</i>&nbsp;        for (Player player : turn) {</b>
+<b class="fc"><i>477</i>&nbsp;            player.reset();</b>
+<i>478</i>&nbsp;        }
+<b class="fc"><i>479</i>&nbsp;        this.playersWhoWon=0;</b>
+<b class="fc"><i>480</i>&nbsp;        this.playersWhoLost=0;</b>
+<b class="fc"><i>481</i>&nbsp;        this.id = 0;</b>
+<b class="fc"><i>482</i>&nbsp;        initialize();</b>
+<b class="fc"><i>483</i>&nbsp;    }</b>
+<i>484</i>&nbsp;
+<i>485</i>&nbsp;
+<i>486</i>&nbsp;    /**
+<i>487</i>&nbsp;     * This function notifies every client a new state of the board, phase, turn and message
+<i>488</i>&nbsp;     */
+<i>489</i>&nbsp;    public void notifyChanges(){
+<b class="fc"><i>490</i>&nbsp;        notifyObservers(new GameBoardMessage(getBoardClone(), turn[id], this.playerMessage, this.messageType, this.phase));</b>
+<b class="fc"><i>491</i>&nbsp;    }</b>
+<i>492</i>&nbsp;
+<i>493</i>&nbsp;    /**
+<i>494</i>&nbsp;     * Similar to notifyChanges, this method is used to notify clients that there is a new phase on the game
+<i>495</i>&nbsp;     * without changes to the board.
+<i>496</i>&nbsp;     * @param message is string representing the message that needs to be notified to clients
+<i>497</i>&nbsp;     */
+<i>498</i>&nbsp;    public void notifyMessage(String message){
+<b class="fc"><i>499</i>&nbsp;        notifyObservers(new GameMessage(turn[id],message, MessageType.VOID_MESSAGE, this.phase));</b>
+<b class="fc"><i>500</i>&nbsp;    }</b>
+<i>501</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-01 21:39</div>
+</div>
+</body>
+</html>
